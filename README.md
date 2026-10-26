@@ -10,8 +10,13 @@ This project aims to:
 **Keep Payments Transparent:** Keep tabs on payment statuses and amounts linked directly to specific collection requests. 
 
 # How the System Works (Key Features)
-**-User Accounts & Profiles:** Users can sign up, log in, and save their specific addresses, phone numbers, and location details so collectors can easily find them.#
+#
+**-User Accounts & Profiles:** Users can sign up, log in, and save their specific addresses, phone numbers, and location details so collectors can easily find them.
+#
 **-Rubbish Details:** Defines the types of waste accepted, including categories, pricing rates, weights, and descriptions.
+#
 **-Pickup Requests:** Users create requests for specific types of waste, which are then assigned to a collector. The system tracks whether a request is pending, approved, or completed along with the collection date.
+#
 **-Collector Details:** Manages collector profiles, including their names, contact details, and assigned working zones.
+#
 **-Payments:** Tracks financial transactions for each pickup, logging the amount, payment date, and status.  
