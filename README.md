@@ -19,6 +19,9 @@ This project aims to:
 #
 **-Collector Details:** Manages collector profiles, including their names, contact details, and assigned working zones.
 #
-**-Payments:** Tracks financial transactions for each pickup, logging the amount, payment date, and status.  
+**-Payments:** Tracks financial transactions for each pickup, logging the amount, payment date, and status.
+#
+# Attached is the Entity Relation Diagram(ERD)
+Suggestions and improvement are welcome
 <img width="440" height="544" alt="image" src="https://github.com/user-attachments/assets/90aa9bf7-86bb-4ad5-aaa0-7357d0e3657e" />
 
