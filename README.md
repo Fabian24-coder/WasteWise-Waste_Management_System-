@@ -3,8 +3,10 @@ This is a web application built with Python and Django designed to make garbage 
 # What We Are Trying to Achieve
 This project aims to:
 #
-**-Connect Residents and Collectors:** Give everyday users an easy way to request pickups while helping collectors manage their daily routes and assigned areas.#
+**-Connect Residents and Collectors:** Give everyday users an easy way to request pickups while helping collectors manage their daily routes and assigned areas.
+#
 **-Track Waste Clearly:** Standardize waste categories, weights, and pricing so everyone knows what is being collected and how much it costs.
+#
 **Keep Payments Transparent:** Keep tabs on payment statuses and amounts linked directly to specific collection requests. 
 
 # How the System Works (Key Features)
