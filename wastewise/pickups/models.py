@@ -17,8 +17,8 @@ class pickup_request(models.Model):
     collection_date = models.DateField(null=False, blank=False)
 
 
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    # created_at = models.DateTimeField(auto_now_add=True)
+    # updated_at = models.DateTimeField(auto_now=True)
     
     def __str__(self):
         return f"{self.request_date} {self.request_status} {self.collection_date}"
