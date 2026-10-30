@@ -6,6 +6,7 @@ from .models import pickup_request
 
 def pickup_request_views(request):
     # return HttpResponse("This is the pickup request view.")
+    
     pickup_requests = pickup_request.objects.all()
     context = {
         'pickup_requests': pickup_requests

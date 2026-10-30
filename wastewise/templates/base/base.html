@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      table,
+      th,
+      td {
+        border: 1px solid black;
+        border-spacing: 0cap;
+      }
+    </style>
+    <title>{{ title }}</title>
+  </head>
+  <body>
+    <ul style="list-style: none; display: flex">
+      <li style="margin-right: 50px">
+        <a href="{% url 'pickup_request_views' %}">Display Pickup Request</a>
+      </li>
+    </ul>
+    {% block content %} {% endblock %}
+  </body>
+</html>
