@@ -21,7 +21,9 @@
     <td>{{ pickup_requests.request_date }}</td>
     <td>{{ pickup_requests.request_status }}</td>
     <td>{{ pickup_requests.collection_date }}</td>
-    <td><a href="">edit</a></td>
+    <td>
+      <a href="{% url 'update_pickup_requests' pickup_requests.id %}">edit</a>
+    </td>
     <td><a href="">delete</a></td>
   </tr>
   {% endfor %} {% endblock %}
