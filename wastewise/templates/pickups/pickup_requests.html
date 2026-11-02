@@ -2,8 +2,8 @@
 
 <h1>Pickup Requests</h1>
 <h2>List of Pickup Requests</h2>
-<table>
-  <tr>
+  <table>
+    <tr>
     <th>S/N</th>
     <th>User ID</th>
     <th>Collector ID</th>
@@ -11,20 +11,32 @@
     <th>Request Status</th>
     <th>Collection Date</th>
     <th colspan="2">Options</th>
-  </tr>
-  {% for pickup_requests in page_obj %}
+    </tr>
+    {% for pickup_requests in page %}
 
-  <tr>
-    <td>{{ forloop.counter }}</td>
-    <td>{{ pickup_requests.user_id }}</td>
-    <td>{{ pickup_requests.collector_id }}</td>
-    <td>{{ pickup_requests.request_date }}</td>
-    <td>{{ pickup_requests.request_status }}</td>
-    <td>{{ pickup_requests.collection_date }}</td>
-    <td>
-      <a href="{% url 'update_pickup_requests' pickup_requests.id %}">edit</a>
-    </td>
-    <td><a href="">delete</a></td>
-  </tr>
-  {% endfor %} {% endblock %}
-</table>
+      <tr>
+      <td>{{ forloop.counter }}</td>
+      <td>{{ pickup_requests.user_id }}</td>
+      <td>{{ pickup_requests.collector_id }}</td>
+      <td>{{ pickup_requests.request_date }}</td>
+      <td>{{ pickup_requests.request_status }}</td>
+      <td>{{ pickup_requests.collection_date }}</td>
+      <td>
+        <a href="{% url 'update_pickup_requests' pickup_requests.id %}">edit</a>
+      </td>
+      <td>
+        <a href="{% url 'delete_pickup_requests' pickup_requests.id %}">delete</a>
+      </td>
+      </tr>
+    
+    {% endfor %}
+  </table>
+{% if page.has_previous %}
+   <a href="?page=1">First</a>
+   <a href="?page={{ page.previous_page_number }}" ">Previous</a>
+{% endif %}
+{% if page.has_next %}
+   <a href="?page={{ page.next_page_number }}" >Next</a>
+   <a href="?page={{ page.paginator.num_pages }}">Last</a>
+{% endif %}
+{% endblock %}

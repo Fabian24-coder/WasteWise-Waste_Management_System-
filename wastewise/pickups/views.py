@@ -7,18 +7,17 @@ from django.core.paginator import Paginator
 # Create your views here.
 
 def pickup_request_views(request):
-    # return HttpResponse("This is the pickup request view.")
-    
     pickup_requests = pickup_request.objects.all().order_by('-id')
-    paginate = Paginator(pickup_requests, 6)
-    page_number = request.GET.get("page")
-    page_obj = paginate.get_page(page_number)
+
+    p = Paginator(pickup_requests,5)
+    page_num = request.GET.get('page',2)
+    page = p.get_page(page_num)
+   
     context = {
         'pickup_requests': pickup_requests,
-        'page_obj': page_obj
+        'page': page
     }
     return render(request, 'pickups/pickup_requests.html', context)
-
 
 def createpickUp_request_Views(request):
     if request.method == "POST":
@@ -44,3 +43,8 @@ def update_pickup_requests(request,pickup_request_id):
 
     context = {"update_pickup_request": update_pickup_request} #context can be renamed anything
     return render(request, "pickups/update_pickup_request.html",context)
+
+def delete_pickup_request(request,pickup_request_id):
+    delete_pickup_requests = pickup_request.objects.get(id=pickup_request_id)
+    delete_pickup_requests.delete()
+    return redirect("pickup_requests")
