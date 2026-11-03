@@ -16,10 +16,10 @@
   <body>
     <ul style="list-style: none; display: flex">
       <li style="margin-right: 50px">
-        <a href="{% url 'pickup_request_views' %}">Display Pickup Request</a>
+        <a href="{% url 'pickups:display_pickup_requests' %}">Display Pickup Request</a>
       </li>
       <li style="margin-right: 50px">
-        <a href="{% url 'create_pickup_request_views' %}">Create Pickup Request</a>
+        <a href="{% url 'pickups:place_pickup_request_views' %}">Create Pickup Request</a>
       </li>
     </ul>
     {% block content %} {% endblock %}

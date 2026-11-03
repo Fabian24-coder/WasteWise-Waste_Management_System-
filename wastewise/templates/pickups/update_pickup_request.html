@@ -3,6 +3,6 @@
 <form action="" method="post">
   {% csrf_token %} {{ update_pickup_request.as_p }} {{author_form}}
   <button type="submit">Update</button>
-  <td><button>Cancel</button></td>
+  <button><a href="{% url 'pickups:display_pickup_requests' %}">Cancel</a></button>
 </form>
 {% endblock %}

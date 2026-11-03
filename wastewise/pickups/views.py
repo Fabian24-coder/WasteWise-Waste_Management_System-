@@ -1,4 +1,4 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.http import HttpResponse
 from .models import pickup_request
 from .forms import CreatePickUpRequestForm, Update_pickup_requestForm
@@ -17,14 +17,14 @@ def pickup_request_views(request):
         'pickup_requests': pickup_requests,
         'page': page
     }
-    return render(request, 'pickups/pickup_requests.html', context)
+    return render(request, 'pickups/display_pickup_requests.html', context)
 
-def createpickUp_request_Views(request):
+def place_pickUp_request_Views(request):
     if request.method == "POST":
         make_pickup_request = CreatePickUpRequestForm(request.POST)
         if make_pickup_request.is_valid():
             make_pickup_request.save()
-            return redirect("pickup_request_views")
+            return redirect("pickups:display_pickup_requests")
     else:
         make_pickup_request = CreatePickUpRequestForm()
 
@@ -37,7 +37,7 @@ def update_pickup_requests(request,pickup_request_id):
         update_pickup_request = Update_pickup_requestForm(request.POST, instance=get_pickup_request)
         if update_pickup_request.is_valid():
             update_pickup_request.save()
-            return redirect("pickup_request_views")
+            return redirect("pickups:display_pickup_requests")
     else:
         update_pickup_request = Update_pickup_requestForm(instance=get_pickup_request)
 
@@ -45,6 +45,7 @@ def update_pickup_requests(request,pickup_request_id):
     return render(request, "pickups/update_pickup_request.html",context)
 
 def delete_pickup_request(request,pickup_request_id):
+    # get_pickup_request = get_object_or_404(pickup_request, id=pickup_request_id)
     delete_pickup_requests = pickup_request.objects.get(id=pickup_request_id)
     delete_pickup_requests.delete()
-    return redirect("pickup_requests")
+    return redirect("pickups:display_pickup_requests")
