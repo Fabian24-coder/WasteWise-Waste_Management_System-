@@ -1,0 +1,8 @@
+{% extends "base/base.html" %} {% block content %}
+<h1>Update Pickup Request</h1>
+<form action="" method="post">
+  {% csrf_token %} {{ update_pickup_request.as_p }} {{author_form}}
+  <button type="submit">Update</button>
+  <button><a href="{% url 'pickups:display_pickup_requests' %}">Cancel</a></button>
+</form>
+{% endblock %}

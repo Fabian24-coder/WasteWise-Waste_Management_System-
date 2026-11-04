@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'import_export',
     'accounts',
     'collectors',
     'payments',
@@ -62,7 +63,7 @@ ROOT_URLCONF = 'wastewise.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],  # Add this line to specify the templates directory
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

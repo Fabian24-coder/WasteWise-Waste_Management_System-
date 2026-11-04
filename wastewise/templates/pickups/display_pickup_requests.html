@@ -1,0 +1,54 @@
+{% extends "base/base.html" %} {% block content %}
+
+<h1>Pickup Requests</h1>
+<h2>List of Pickup Requests</h2>
+  <table>
+    <tr>
+    <th>S/N</th>
+    <th>User ID</th>
+    <th>Collector ID</th>
+    <th>Request Date</th>
+    <th>Request Status</th>
+    <th>Collection Date</th>
+    <th colspan="2">Options</th>
+    </tr>
+    {% for pickup_requests in page %}
+
+      <tr>
+       <td>{{ page.start_index|add:forloop.counter0 }}</td>
+      <td>{{ pickup_requests.user_id }}</td>
+      <td>{{ pickup_requests.collector_id }}</td>
+      <td>{{ pickup_requests.request_date }}</td>
+      <td>{{ pickup_requests.request_status }}</td>
+      <td>{{ pickup_requests.collection_date }}</td>
+      <td>
+        <a href="{% url 'pickups:update_pickup_requests' pickup_requests.id %}">edit</a>
+      </td>
+      <td>
+        <a href="{% url 'pickups:delete_pickup_requests' pickup_requests.id %}">delete</a>
+      </td>
+      </tr>
+    
+    {% endfor %}
+  </table>
+  {% if page.paginator.num_pages > 1 %}
+    <p>Showing <span>{{ page.start_index }}</span> to <span>{{ page.end_index }}</span> of <span>{{ page.paginator.count }}</span> records</p>
+  {% endif %}
+{% if page.has_previous %}
+   <a href="?page=1">First</a>
+   <a href="?page={{ page.previous_page_number }}" ">Previous</a>
+{% endif %}
+
+{% for i in page.paginator.page_range %}
+  {% if page.number == i %}
+    <span>{{ i }}</span>
+    {% elif i > page.number|add:'-3' and i < page.number|add:'3' %}
+      <a href="?page={{ i }}">{{ i }}</a>
+  {% endif %}
+{% endfor %}
+
+{% if page.has_next %}
+   <a href="?page={{ page.next_page_number }}" >Next</a>
+   <a href="?page={{ page.paginator.num_pages }}">Last</a>
+{% endif %}
+{% endblock %}
