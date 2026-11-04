@@ -11,10 +11,6 @@ from rest_framework import status
 from .serializers import PickUpRequestSerializer
 
 
-# ==========================================
-# 1. LIST & DISPLAY REQUESTS
-# ==========================================
-
 # Template View
 def pickup_request_views(request):
     pickup_requests = pickup_request.objects.all().order_by('-id')
@@ -33,11 +29,6 @@ def api_pickup_request_list(request):
     pickup_requests = pickup_request.objects.all().order_by('-id')
     serializer = PickUpRequestSerializer(pickup_requests, many=True)
     return Response(serializer.data)
-
-
-# ==========================================
-# 2. CREATE REQUESTS
-# ==========================================
 
 # Template View
 def place_pickUp_request_Views(request):
@@ -61,10 +52,6 @@ def api_place_pickup_request(request):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-# ==========================================
-# 3. UPDATE REQUESTS
-# ==========================================
 
 # Template View
 def update_pickup_requests(request, pickup_request_id):
@@ -91,10 +78,6 @@ def api_update_pickup_request(request, pickup_request_id):
         return Response(serializer.data)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-# ==========================================
-# 4. DELETE REQUESTS
-# ==========================================
 
 # Template View
 def delete_pickup_request(request, pickup_request_id):

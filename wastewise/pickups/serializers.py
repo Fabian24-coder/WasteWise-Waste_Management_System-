@@ -8,7 +8,7 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'email']
 
 class PickUpRequestSerializer(serializers.ModelSerializer):
-    # Optional: Nested serializers to show user details instead of just IDs on GET requests
+    # This is OptionalNested serializers to show user details instead of just IDs on GET requests
     user_detail = UserSerializer(source='user_id', read_only=True)
     collector_detail = UserSerializer(source='collector_id', read_only=True)
 
