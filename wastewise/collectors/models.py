@@ -18,11 +18,13 @@ class Collector(models.Model):
     ]
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='collector_profile')
-    phone = models.CharField(max_length=20)
+    phone_number = models.CharField(max_length=20)
     zone = models.ForeignKey(Zone, on_delete=models.SET_NULL, null=True, blank=True, related_name='collectors')
     status = models.CharField(max_length=20, choices=STATUS_OPTIONS, default='pending')
     is_available = models.BooleanField(default=False)
-    date_joined = models.DateTimeField(auto_now_add=True)
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.user.get_full_name() or self.user.username
