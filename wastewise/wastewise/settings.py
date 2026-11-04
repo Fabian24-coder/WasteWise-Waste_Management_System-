@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'pickups',
     'profiles',
     'rubbish',
+    'rest_framework',
+    'drf_spectacular'
 ]
 
 MIDDLEWARE = [
@@ -131,4 +133,16 @@ MAILERS = {
     'default': {
         'BACKEND': 'django.core.mail.backends.console.EmailBackend',
     },
+}
+
+# Django REST Framework
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+# API documentation (drf-spectacular)
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'WasteWise APIs',
+    'DESCRIPTION': 'API for the WasteWise waste management system',
+    'VERSION': '1.0.0',
 }
