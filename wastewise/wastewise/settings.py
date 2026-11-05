@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'profiles',
     'rubbish',
     'rest_framework',
-    'drf_spectacular'
+    'drf_spectacular',
+    'rest_framework.authtoken'
 ]
 
 MIDDLEWARE = [
@@ -139,6 +140,10 @@ MAILERS = {
 # Django REST Framework
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+     'DEFAULT_AUTHENTICATION_CLASSES': [                              
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
 }
 
 # API documentation (drf-spectacular)
@@ -148,5 +153,9 @@ SPECTACULAR_SETTINGS = {
     'VERSION': '1.0.0',
 }
 
+
+AUTH_USER_MODEL = "accounts.User"
+
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
+
