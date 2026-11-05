@@ -63,7 +63,8 @@ ROOT_URLCONF = 'wastewise.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],  # Add this line to specify the templates directory
+        'DIRS': [BASE_DIR / 'templates'],
+        # Add this line to specify the templates directory
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -146,3 +147,6 @@ SPECTACULAR_SETTINGS = {
     'DESCRIPTION': 'API for the WasteWise waste management system',
     'VERSION': '1.0.0',
 }
+
+STATIC_URL = 'static/'
+STATICFILES_DIRS = [BASE_DIR / 'static']

@@ -21,9 +21,11 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, Sp
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('pickups/', include('pickups.urls')),  # Include the pickups app URLs
+    path('rubbish/', include('rubbish.urls')), # Include the rubbish management app URLs
     path('api/', include('collectors.urls')),
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path('api/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+    
 ]
 
