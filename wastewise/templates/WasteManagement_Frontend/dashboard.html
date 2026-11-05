@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Dashboard · CleanCity</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body data-page="dashboard">
+    <div class="app">
+        <aside class="sidebar" id="sidebar"><a class="brand" href="dashboard.html"><span
+                    class="logo">C</span><span>Clean<span>City</span></span></a>
+            <div class="nav-title">MANAGEMENT</div>
+            <nav><a class="nav-link active" href="dashboard.html"><span>▦</span>Dashboard</a><a class="nav-link "
+                    href="requests.html"><span>♧</span>Pickup Requests</a><a class="nav-link "
+                    href="waste.html"><span>▤</span>Rubbish Details</a><a class="nav-link "
+                    href="collectors.html"><span>♟</span>Collectors</a><a class="nav-link "
+                    href="payments.html"><span>₦</span>Payments</a><a class="nav-link "
+                    href="profile.html"><span>●</span>User Profile</a></nav>
+            <div class="side-bottom"><a class="nav-link" href="profile.html"><span>⚙</span>Settings</a><a
+                    class="nav-link" href="logout.html"><span>↪</span>Sign out</a>
+                <div class="user-mini">
+                    <div class="avatar" id="sideAvatar">U</div>
+                    <div><b id="sideName">User</b><small id="sideEmail">user@example.com</small></div>
+                </div>
+            </div>
+        </aside>
+        <main class="main">
+            <header class="topbar"><button class="menu" id="menu">☰</button>
+                <div class="crumb">CleanCity <span>/</span> <b>Dashboard</b></div><a href="profile.html"
+                    class="profile-link"><span class="avatar" id="topAvatar">U</span><span
+                        id="topName">Profile</span></a>
+            </header>
+            <div class="content">
+                <section class="intro">
+                    <div><label>OVERVIEW</label>
+                        <h1>Waste management at a glance</h1>
+                        <p>Monitor requests, collections, payments and your service network.</p>
+                    </div><a class="btn primary" href="requests.html">＋ New pickup request</a>
+                </section>
+                <section class="stats">
+                    <article><span>Pickup requests</span><strong id="sRequests">0</strong><small>Total requests</small>
+                    </article>
+                    <article><span>Pending requests</span><strong id="sPending">0</strong><small class="amber">Needs
+                            attention</small></article>
+                    <article><span>Payments</span><strong id="sPayments">0</strong><small>Recorded payments</small>
+                    </article>
+                    <article><span>Collectors</span><strong id="sCollectors">0</strong><small>Registered
+                            collectors</small></article>
+                </section>
+                <div class="grid two">
+                    <article class="panel">
+                        <div class="panel-head">
+                            <div>
+                                <h2>Pickup activity</h2>
+                                <p>Recent service requests</p>
+                            </div><a href="requests.html">View all →</a>
+                        </div>
+                        <div id="recentRequests" class="list-empty">No pickup requests yet.</div>
+                    </article>
+                    <article class="panel">
+                        <div class="panel-head">
+                            <div>
+                                <h2>Payment status</h2>
+                                <p>Latest payment records</p>
+                            </div><a href="payments.html">View all →</a>
+                        </div>
+                        <div id="recentPayments" class="list-empty">No payments yet.</div>
+                    </article>
+                </div>
+                <div class="grid three">
+                    <article class="panel">
+                        <div class="panel-head">
+                            <div>
+                                <h2>Rubbish details</h2>
+                                <p>Categories and rates</p>
+                            </div>
+                        </div>
+                        <div id="wasteSnapshot" class="snapshot"></div>
+                    </article>
+                    <article class="panel">
+                        <div class="panel-head">
+                            <div>
+                                <h2>Collectors</h2>
+                                <p>Collection team</p>
+                            </div>
+                        </div>
+                        <div id="collectorSnapshot" class="snapshot"></div>
+                    </article>
+                    <article class="panel action-panel">
+                        <h2>Quick actions</h2><a href="waste.html">＋ Add rubbish details</a><a href="collectors.html">＋
+                            Add collector</a><a href="payments.html">＋ Record payment</a>
+                    </article>
+                </div>
+                <footer>© 2026 CleanCity <span>Waste collection management made simple.</span></footer>
+            </div>
+        </main>
+    </div>
+    <div id="toast" class="toast"></div>
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Pickup Requests · CleanCity</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body data-page="requests">
+    <div class="app">
+        <aside class="sidebar" id="sidebar"><a class="brand" href="dashboard.html"><span
+                    class="logo">C</span><span>Clean<span>City</span></span></a>
+            <div class="nav-title">MANAGEMENT</div>
+            <nav><a class="nav-link " href="dashboard.html"><span>▦</span>Dashboard</a><a class="nav-link active"
+                    href="requests.html"><span>♧</span>Pickup Requests</a><a class="nav-link "
+                    href="waste.html"><span>▤</span>Rubbish Details</a><a class="nav-link "
+                    href="collectors.html"><span>♟</span>Collectors</a><a class="nav-link "
+                    href="payments.html"><span>₦</span>Payments</a><a class="nav-link "
+                    href="profile.html"><span>●</span>User Profile</a></nav>
+            <div class="side-bottom"><a class="nav-link" href="profile.html"><span>⚙</span>Settings</a><a
+                    class="nav-link" href="logout.html"><span>↪</span>Sign out</a>
+                <div class="user-mini">
+                    <div class="avatar" id="sideAvatar">U</div>
+                    <div><b id="sideName">User</b><small id="sideEmail">user@example.com</small></div>
+                </div>
+            </div>
+        </aside>
+        <main class="main">
+            <header class="topbar"><button class="menu" id="menu">☰</button>
+                <div class="crumb">CleanCity <span>/</span> <b>Pickup Requests</b></div><a href="profile.html"
+                    class="profile-link"><span class="avatar" id="topAvatar">U</span><span
+                        id="topName">Profile</span></a>
+            </header>
+            <div class="content">
+                <section class="intro">
+                    <div><label>MANAGEMENT</label>
+                        <h1>Pickup Requests</h1>
+                        <p>Create, update and manage pickup requests.</p>
+                    </div><button class="btn primary" id="openForm">＋ Create pickup request</button>
+                </section>
+                <div class="panel form-panel" id="entryPanel" hidden>
+                    <div class="panel-head">
+                        <div>
+                            <h2>Create pickup request</h2>
+                            <p>Enter the details below.</p>
+                        </div><button class="close" id="closeForm">×</button>
+                    </div>
+                    <form id="recordForm" class="form-grid"><label>User<input name="user_id" type="text"
+                                required></label><label>Waste ID<input name="waste_id" type="text"
+                                required></label><label>Collector<input name="collector_id" type="text"
+                                required></label><label>Request date<input name="request_Date" type="date"
+                                required></label><label>Status<select name="request_Status" required>
+                                <option value="">Select status</option>
+                                <option>Pending</option>
+                                <option>Approved</option>
+                                <option>Collected</option>
+                                <option>Cancelled</option>
+                            </select></label><label>Collection date<input name="collection_date" type="date"></label>
+                        <div class="actions"><button class="btn primary">Save record</button><button type="button"
+                                class="btn secondary" id="cancelForm">Cancel</button><span id="feedback"></span></div>
+                    </form>
+                </div>
+                <div class="panel">
+                    <div class="table-toolbar">
+                        <div>
+                            <h2>Pickup Requests</h2>
+                            <p id="count">0 records</p>
+                        </div><input id="search" class="search" placeholder="Search…">
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Waste ID</th>
+                                    <th>Collector</th>
+                                    <th>Request date</th>
+                                    <th>Status</th>
+                                    <th>Collection date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="rows">
+                                <tr>
+                                    <td colspan="7" class="empty">No records yet. Use the button above to add one.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <footer>© 2026 CleanCity <span>Waste collection management made simple.</span></footer>
+            </div>
+        </main>
+    </div>
+    <div id="toast" class="toast"></div>
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

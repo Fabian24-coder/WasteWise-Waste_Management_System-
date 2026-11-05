@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Create account · CleanCity</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body class="auth" data-page="register">
+    <div class="auth-art"><span class="logo">C</span>
+        <h2>Cleaner streets.<br>Better communities.</h2>
+        <p>A simple workspace for managing rubbish, pickups, collectors and payments.</p>
+    </div>
+    <main class="auth-main">
+        <div class="auth-card"><a class="brand dark" href="login.html"><span
+                    class="logo">C</span><span>Clean<span>City</span></span></a><label>GET STARTED</label>
+            <h1>Create account</h1>
+            <p class="sub">Manage your waste collection service from one place.</p>
+            <form id="registerForm" class="auth-form"><label>Username<input name="username" required
+                        placeholder="Choose a username"></label><label>Email<input name="email" type="email" required
+                        placeholder="you@example.com"></label><label>Password<input name="password" type="password"
+                        minlength="6" required placeholder="At least 6 characters"></label><label>Confirm password<input
+                        name="confirm" type="password" required placeholder="Repeat your password"></label><button
+                    class="btn primary full">Create account</button>
+                <p id="authFeedback"></p>
+            </form>
+            <p class="switch">Already have an account? <a href="login.html">Sign in</a></p><small
+                class="demo-note">Frontend prototype: connect these forms to Django authentication and database APIs for
+                production.</small>
+        </div>
+    </main>
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

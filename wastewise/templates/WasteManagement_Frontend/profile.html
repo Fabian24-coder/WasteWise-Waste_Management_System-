@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>User Profile · CleanCity</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body data-page="profile">
+    <div class="app">
+        <aside class="sidebar" id="sidebar"><a class="brand" href="dashboard.html"><span
+                    class="logo">C</span><span>Clean<span>City</span></span></a>
+            <div class="nav-title">MANAGEMENT</div>
+            <nav><a class="nav-link " href="dashboard.html"><span>▦</span>Dashboard</a><a class="nav-link "
+                    href="requests.html"><span>♧</span>Pickup Requests</a><a class="nav-link "
+                    href="waste.html"><span>▤</span>Rubbish Details</a><a class="nav-link "
+                    href="collectors.html"><span>♟</span>Collectors</a><a class="nav-link "
+                    href="payments.html"><span>₦</span>Payments</a><a class="nav-link active"
+                    href="profile.html"><span>●</span>User Profile</a></nav>
+            <div class="side-bottom"><a class="nav-link" href="profile.html"><span>⚙</span>Settings</a><a
+                    class="nav-link" href="logout.html"><span>↪</span>Sign out</a>
+                <div class="user-mini">
+                    <div class="avatar" id="sideAvatar">U</div>
+                    <div><b id="sideName">User</b><small id="sideEmail">user@example.com</small></div>
+                </div>
+            </div>
+        </aside>
+        <main class="main">
+            <header class="topbar"><button class="menu" id="menu">☰</button>
+                <div class="crumb">CleanCity <span>/</span> <b>User Profile</b></div><a href="profile.html"
+                    class="profile-link"><span class="avatar" id="topAvatar">U</span><span
+                        id="topName">Profile</span></a>
+            </header>
+            <div class="content">
+                <section class="intro">
+                    <div><label>ACCOUNT</label>
+                        <h1>User profile</h1>
+                        <p>Manage the profile information represented in the ERD.</p>
+                    </div>
+                </section>
+                <div class="panel form-panel">
+                    <div class="profile-head">
+                        <div class="avatar big" id="profileAvatar">U</div>
+                        <div>
+                            <h2 id="profileDisplay">User</h2>
+                            <p id="profileMail">user@example.com</p>
+                        </div>
+                    </div>
+                    <form id="profileForm" class="form-grid"><label>Username<input name="username" id="pUsername"
+                                required></label><label>Email<input name="email" id="pEmail" type="email"
+                                required></label><label>First name<input name="firstName"
+                                id="pFirst"></label><label>Last name<input name="lastName"
+                                id="pLast"></label><label>Phone number<input name="phoneNumber"
+                                id="pPhone"></label><label>Street<input name="street"
+                                id="pStreet"></label><label>City<input name="city" id="pCity"></label>
+                        <div class="actions"><button class="btn primary">Save profile</button><span
+                                id="profileFeedback"></span></div>
+                    </form>
+                </div>
+                <footer>© 2026 CleanCity <span>Waste collection management made simple.</span></footer>
+            </div>
+        </main>
+    </div>
+    <div id="toast" class="toast"></div>
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

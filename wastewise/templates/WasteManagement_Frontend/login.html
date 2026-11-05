@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Sign in · CleanCity</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body class="auth" data-page="login">
+    <div class="auth-art"><span class="logo">C</span>
+        <h2>Cleaner streets.<br>Better communities.</h2>
+        <p>A simple workspace for managing rubbish, pickups, collectors and payments.</p>
+    </div>
+    <main class="auth-main">
+        <div class="auth-card"><a class="brand dark" href="login.html"><span
+                    class="logo">C</span><span>Clean<span>City</span></span></a><label>WELCOME BACK</label>
+            <h1>Sign in</h1>
+            <p class="sub">Manage your waste collection service from one place.</p>
+            <form id="loginForm" class="auth-form"><label>Username or email<input name="identity" required
+                        placeholder="Enter your username or email"></label><label>Password<input name="password"
+                        type="password" required placeholder="Enter your password"></label><button
+                    class="btn primary full">Sign in</button>
+                <p id="authFeedback"></p>
+            </form>
+            <p class="switch">New to CleanCity? <a href="register.html">Create an account</a></p><small
+                class="demo-note">Frontend prototype: connect these forms to Django authentication and database APIs for
+                production.</small>
+        </div>
+    </main>
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
