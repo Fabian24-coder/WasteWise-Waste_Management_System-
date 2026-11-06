@@ -1,5 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
+from django.conf import settings
 
 # Create your models here.
 class Zone(models.Model):
@@ -17,7 +18,8 @@ class Collector(models.Model):
         ('suspended', 'Suspended')
     ]
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='collector_profile')
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='collector_profile')
+    # user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='collector_profile')
     phone_number = models.CharField(max_length=20)
     zone = models.ForeignKey(Zone, on_delete=models.SET_NULL, null=True, blank=True, related_name='collectors')
     status = models.CharField(max_length=20, choices=STATUS_OPTIONS, default='pending')
@@ -26,5 +28,9 @@ class Collector(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    # def __str__(self):
+    #     return self.user.get_full_name() or self.user.username
+
     def __str__(self):
-      return self.user.get_full_name() or self.user.email
+        return self.user.get_full_name() or self.user.email
+    

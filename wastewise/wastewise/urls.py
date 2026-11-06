@@ -16,10 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from django.views.generic import RedirectView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
 
 urlpatterns = [
+    path('', RedirectView.as_view(pattern_name='pickups:dashboard', permanent=False)),
     path('admin/', admin.site.urls),
+    path('accounts/', include('accounts.web_urls')),
     path('pickups/', include('pickups.urls')),  # Include the pickups app URLs
     path('rubbish/', include('rubbish.urls')), # Include the rubbish management app URLs
     path('', include('collectors.urls')), # Include the collectors app URLs
@@ -27,6 +30,7 @@ urlpatterns = [
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path('api/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+    path("api/auth/", include("accounts.urls")),
+    path("api/profile/", include("profiles.urls")),
     
 ]
-

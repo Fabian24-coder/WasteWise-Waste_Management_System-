@@ -1,35 +1,82 @@
 {% load static %}
 <!doctype html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <style>
-    table,
-    th,
-    td {
-      border: 1px solid black;
-      border-spacing: 0cap;
-    }
-  </style>
-  <title>{{ title }}</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}WasteWise{% endblock %} · CleanCity</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  {% block extra_head %}{% endblock %}
 </head>
-
-<body>
-  <ul style="list-style: none; display: flex">
-    <li style="margin-right: 50px">
-      <a href="{% url 'pickups:display_pickup_requests' %}">Display Pickup Request</a>
-    </li>
-    <li style="margin-right: 50px">
-      <a href="{% url 'pickups:place_pickup_request_views' %}">Create Pickup Request</a>
-    </li>
-    <li style="margin-right: 50px">
-      <a href="{% url 'rubbish_list' %}">Waste Types</a>
-    </li>
-  </ul>
-  {% block content %} {% endblock %}
+<body{% if not request.user.is_authenticated %} class="auth"{% endif %}>
+  {% if request.user.is_authenticated %}
+    <div class="app">
+      <aside class="sidebar" id="sidebar">
+        <a class="brand" href="{% url 'pickups:dashboard' %}">
+          <span class="logo">C</span><span>Clean<span>City</span></span>
+        </a>
+        <div class="nav-title">WASTEWISE</div>
+        <nav>
+          <a class="nav-link{% if active_page == 'dashboard' %} active{% endif %}" href="{% url 'pickups:dashboard' %}"><span>▦</span>Dashboard</a>
+          <a class="nav-link{% if active_page == 'requests' %} active{% endif %}" href="{% url 'pickups:display_pickup_requests' %}"><span>♧</span>Pickup requests</a>
+          {% if request.user.role == "requestor" %}
+            <a class="nav-link{% if active_page == 'create_request' %} active{% endif %}" href="{% url 'pickups:place_pickup_request_views' %}"><span>＋</span>New request</a>
+          {% endif %}
+          {% if request.user.role == "admin" or request.user.is_superuser %}
+            <a class="nav-link{% if active_page == 'waste' %} active{% endif %}" href="{% url 'rubbish_list' %}"><span>▤</span>Waste rates</a>
+            <a class="nav-link" href="{% url 'admin:index' %}"><span>⚙</span>Admin</a>
+          {% endif %}
+        </nav>
+        <div class="side-bottom">
+          <form method="post" action="{% url 'web_logout' %}">
+            {% csrf_token %}
+            <button class="nav-link logout-link" type="submit"><span>↪</span>Sign out</button>
+          </form>
+          <div class="user-mini">
+            <div class="avatar">{{ request.user.first_name|default:request.user.email|first|upper }}</div>
+            <div><b>{{ request.user.get_full_name|default:request.user.email }}</b><small>{{ request.user.email }}</small></div>
+          </div>
+        </div>
+      </aside>
+      <main class="main">
+        <header class="topbar">
+          <button class="menu" id="menu" type="button" aria-label="Toggle navigation">☰</button>
+          <div class="crumb">CleanCity <span>/</span> <b>{% block breadcrumb %}Dashboard{% endblock %}</b></div>
+          <span class="profile-link"><span class="avatar">{{ request.user.first_name|default:request.user.email|first|upper }}</span><span>{{ request.user.get_full_name|default:request.user.email }}</span></span>
+        </header>
+        <div class="content">
+  {% else %}
+    <div class="auth-art">
+      <a class="brand" href="{% url 'web_login' %}"><span class="logo">C</span><span>Clean<span>City</span></span></a>
+      <h2>Cleaner streets.<br>Better communities.</h2>
+      <p>A simple workspace for managing rubbish, pickups, collectors and payments.</p>
+    </div>
+    <main class="auth-main">
+      <div class="auth-card">
+        <a class="brand dark" href="{% url 'web_login' %}"><span class="logo">C</span><span>Clean<span>City</span></span></a>
+  {% endif %}
+        {% if messages %}
+          {% for message in messages %}
+            <p class="message {{ message.tags }}">{{ message }}</p>
+          {% endfor %}
+        {% endif %}
+        {% block content %}{% endblock %}
+  {% if request.user.is_authenticated %}
+          <footer>© 2026 CleanCity <span>Waste collection management made simple.</span></footer>
+        </div>
+      </main>
+    </div>
+    <script>
+      document.getElementById("menu").addEventListener("click", () => {
+        document.getElementById("sidebar").classList.toggle("open");
+      });
+    </script>
+  {% else %}
+      </div>
+    </main>
+  {% endif %}
 </body>
-
 </html>

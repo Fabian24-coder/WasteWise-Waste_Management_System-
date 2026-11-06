@@ -16,4 +16,8 @@ media/
 # Editor / OS files
 .vscode/
 .idea/
-Thumbs.db
+Thumbs.db__pycache__/
+*.pyc
+db.sqlite3
+.env
+venv/db.sqlite3

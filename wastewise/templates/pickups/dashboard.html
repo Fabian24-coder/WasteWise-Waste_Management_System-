@@ -1,0 +1,110 @@
+{% extends "base/base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block breadcrumb %}Dashboard{% endblock %}
+{% block content %}
+<section class="intro">
+  <div>
+    <label>OVERVIEW</label>
+    <h1>Waste management at a glance</h1>
+    <p>Monitor collection requests and their latest updates.</p>
+  </div>
+  {% if requestor_role %}
+    <a class="btn primary" href="{% url 'pickups:place_pickup_request_views' %}">＋ New pickup request</a>
+  {% endif %}
+</section>
+
+<section class="stats">
+  <article><span>Pickup requests</span><strong>{{ total_requests }}</strong><small>Total requests</small></article>
+  <article><span>New / pending</span><strong>{{ pending_requests }}</strong><small class="amber">Needs attention</small></article>
+  <article><span>Collected</span><strong>{{ collected_requests }}</strong><small>Confirmed collections</small></article>
+  <article><span>Unpaid</span><strong>{{ unpaid_requests }}</strong><small>Cash due on collection day</small></article>
+</section>
+
+{% if requestor_role and collection_day_requests %}
+  <section class="panel collection-actions">
+    <div class="panel-head">
+      <div><h2>Today’s collection</h2><p>Your collector has scheduled these pickups for today.</p></div>
+    </div>
+    <div class="activity">
+      {% for pickup in collection_day_requests %}
+        <div class="activity-item collection-action-item">
+          <div class="activity-icon">♧</div>
+          <div>
+            <b>{{ pickup.waste_type|default:"Collection request" }} · {{ pickup.total_fee }}</b>
+            <small>{{ pickup.address }} · {{ pickup.scheduled_collection_at|date:"g:i A" }}</small>
+          </div>
+          {% if pickup.payment_status == "unpaid" %}
+            <form method="post" action="{% url 'pickups:confirm_payment' pickup.id %}">
+              {% csrf_token %}
+              <button class="btn primary" type="submit">Confirm cash payment</button>
+            </form>
+          {% else %}
+            <form method="post" action="{% url 'pickups:confirm_collection' pickup.id %}">
+              {% csrf_token %}
+              <button class="btn primary" type="submit">Confirm collection</button>
+            </form>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+{% elif requestor_role %}
+  <section class="panel collection-actions">
+    <div class="panel-head">
+      <div><h2>Payment and collection</h2><p>Cash payment can be confirmed on the scheduled collection day after your request is accepted and scheduled.</p></div>
+    </div>
+    <p class="form-help">When your collector schedules a pickup for today, the payment confirmation button will appear here.</p>
+  </section>
+{% endif %}
+
+<div class="grid two">
+  <article class="panel">
+    <div class="panel-head">
+      <div><h2>Pickup activity</h2><p>Recent service requests</p></div>
+      <a href="{% url 'pickups:display_pickup_requests' %}">View all →</a>
+    </div>
+    <div class="activity">
+      {% for pickup in recent_requests %}
+        <div class="activity-item">
+          <div class="activity-icon">♧</div>
+          <div>
+            <b>{{ pickup.waste_type|default:"Collection request" }}</b>
+            <small>{{ pickup.get_request_status_display }} · {{ pickup.collection_date }}</small>
+          </div>
+          <strong>{{ pickup.total_fee }}</strong>
+        </div>
+      {% empty %}
+        <div class="list-empty">No pickup requests yet.</div>
+      {% endfor %}
+    </div>
+  </article>
+  <article class="panel">
+    <div class="panel-head"><div><h2>Request status</h2><p>Requests that need attention</p></div></div>
+    <div class="snapshot">
+      <div class="snap"><b>New / pending</b><span>{{ pending_requests }}</span></div>
+      <div class="snap"><b>Awaiting cash payment</b><span>{{ unpaid_requests }}</span></div>
+      <div class="snap"><b>Collection confirmed</b><span>{{ collected_requests }}</span></div>
+      {% if not requestor_role %}<div class="snap"><b>Registered collectors</b><span>{{ collector_count }}</span></div>{% endif %}
+    </div>
+  </article>
+</div>
+
+{% if waste_types %}
+  <article class="panel">
+    <div class="panel-head">
+      <div><h2>Waste collection rates</h2><p>Rates used to estimate each collection fee</p></div>
+      {% if request.user.role == "admin" %}<a href="{% url 'rubbish_list' %}">Manage rates →</a>{% endif %}
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Waste</th><th>Category</th><th>Price per unit</th><th>Distance rate / km</th></tr></thead>
+        <tbody>
+          {% for item in waste_types %}
+            <tr><td>{{ item.name }}</td><td>{{ item.get_category_display }}</td><td>{{ item.rate }} {{ item.get_unit_display }}</td><td>{{ item.distance_rate_per_km }}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </article>
+{% endif %}
+{% endblock %}

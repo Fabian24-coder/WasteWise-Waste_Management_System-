@@ -5,7 +5,7 @@ from .models import RubbishDetail
 class RubbishDetailForm(forms.ModelForm):
     class Meta:
         model = RubbishDetail
-        fields = ['category', 'name', 'rate', 'unit', 'weight',
+        fields = ['category', 'name', 'rate', 'distance_rate_per_km', 'unit', 'weight',
                   'description', 'is_hazardous', 'is_recyclable', 'is_active']
         widgets = {'description': forms.Textarea(attrs={'rows': 3})}
 
