@@ -236,7 +236,7 @@ class PickupWorkflowTests(APITestCase):
 
         response = browser.get(reverse("pickups:display_pickup_requests"))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "CleanCity")
+        self.assertContains(response, "WasteWise")
 
         response = browser.post(
             reverse("pickups:place_pickup_request_views"),

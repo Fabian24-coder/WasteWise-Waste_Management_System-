@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block title %}WasteWise{% endblock %} · CleanCity</title>
+  <title>{% block title %}WasteWise{% endblock %} · WasteWise</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
@@ -16,9 +16,9 @@
     <div class="app">
       <aside class="sidebar" id="sidebar">
         <a class="brand" href="{% url 'pickups:dashboard' %}">
-          <span class="logo">C</span><span>Clean<span>City</span></span>
+          <span class="logo">W</span><span>Waste<span>Wise</span></span>
         </a>
-        <div class="nav-title">WASTEWISE</div>
+        <!-- <div class="nav-title">WASTEWISE</div> -->
         <nav>
           <a class="nav-link{% if active_page == 'dashboard' %} active{% endif %}" href="{% url 'pickups:dashboard' %}"><span>▦</span>Dashboard</a>
           <a class="nav-link{% if active_page == 'requests' %} active{% endif %}" href="{% url 'pickups:display_pickup_requests' %}"><span>♧</span>Pickup requests</a>
@@ -27,6 +27,8 @@
           {% endif %}
           {% if request.user.role == "admin" or request.user.is_superuser %}
             <a class="nav-link{% if active_page == 'waste' %} active{% endif %}" href="{% url 'rubbish_list' %}"><span>▤</span>Waste rates</a>
+                        <a class="nav-link{% if active_page == 'collectors' %} active{% endif %}" href="{% url 'collectors:display_collectors' %}"><span>⛟</span>Collectors</a>
+            <a class="nav-link{% if active_page == 'zones' %} active{% endif %}" href="{% url 'collectors:display_zones' %}"><span>⌖</span>Zones</a>
             <a class="nav-link" href="{% url 'admin:index' %}"><span>⚙</span>Admin</a>
           {% endif %}
         </nav>
@@ -44,7 +46,7 @@
       <main class="main">
         <header class="topbar">
           <button class="menu" id="menu" type="button" aria-label="Toggle navigation">☰</button>
-          <div class="crumb">CleanCity <span>/</span> <b>{% block breadcrumb %}Dashboard{% endblock %}</b></div>
+          <div class="crumb">WasteWise <span>/</span> <b>{% block breadcrumb %}Dashboard{% endblock %}</b></div>
           <span class="profile-link"><span class="avatar">{{ request.user.first_name|default:request.user.email|first|upper }}</span><span>{{ request.user.get_full_name|default:request.user.email }}</span></span>
         </header>
         <div class="content">
@@ -65,7 +67,7 @@
         {% endif %}
         {% block content %}{% endblock %}
   {% if request.user.is_authenticated %}
-          <footer>© 2026 CleanCity <span>Waste collection management made simple.</span></footer>
+          <footer>© 2026 WasteWise <span>Waste collection management made simple.</span></footer>
         </div>
       </main>
     </div>

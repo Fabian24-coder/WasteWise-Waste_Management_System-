@@ -166,8 +166,12 @@ SPECTACULAR_SETTINGS = {
     'VERSION': '1.0.0',
     'COMPONENT_SPLIT_REQUEST': True,
     'SORT_OPERATIONS': True,
+    'TAGS': [
+        {'name': 'Zones', 'description': 'Service areas that collectors are assigned to'},
+        {'name': 'Collectors', 'description': 'Collector profiles: phone, zone, status and availability'},
+        {'name': 'Payments', 'description': 'Cash and mobile money payments for pickups'},
+    ],
 }
-
 
 AUTH_USER_MODEL = "accounts.User"
 LOGIN_URL = "/accounts/login/"

@@ -21,3 +21,5 @@ Thumbs.db__pycache__/
 db.sqlite3
 .env
 venv/db.sqlite3
+staticfiles/
+*.sqlite3
