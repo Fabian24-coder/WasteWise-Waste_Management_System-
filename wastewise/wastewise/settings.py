@@ -149,8 +149,16 @@ REST_FRAMEWORK = {
 # API documentation (drf-spectacular)
 SPECTACULAR_SETTINGS = {
     'TITLE': 'WasteWise APIs',
-    'DESCRIPTION': 'API for the WasteWise waste management system',
+    'DESCRIPTION': (
+        'API for the WasteWise waste management system. Register and log in at '
+        '`/api/auth/register/` and `/api/auth/login/`. Use the returned token in '
+        'the `Authorization: Token <token>` header, or click Authorize and enter '
+        '`Token <token>`. Public registration always creates a requestor. '
+        'Collector decisions and admin management endpoints require their matching role.'
+    ),
     'VERSION': '1.0.0',
+    'COMPONENT_SPLIT_REQUEST': True,
+    'SORT_OPERATIONS': True,
 }
 
 

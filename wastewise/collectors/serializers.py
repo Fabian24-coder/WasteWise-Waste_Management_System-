@@ -1,5 +1,8 @@
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from .models import Zone, Collector
+
+User = get_user_model()
 
 
 class ZoneSerializer(serializers.ModelSerializer):
@@ -33,3 +36,10 @@ class CollectorSerializer(serializers.ModelSerializer):
             'updated_at',
         ]
         read_only_fields = ['created_at', 'updated_at']
+
+    def validate_user(self, user):
+        if user.role != "collector":
+            raise serializers.ValidationError(
+                "The selected account must have the collector role."
+            )
+        return user

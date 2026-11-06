@@ -8,7 +8,7 @@ from .models import pickup_request
 User = get_user_model()
 
 
-class UserSerializer(serializers.ModelSerializer):
+class PickupUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ["id", "email", "first_name", "last_name", "role"]
@@ -29,8 +29,8 @@ class WasteRateSerializer(serializers.ModelSerializer):
 
 
 class PickUpRequestSerializer(serializers.ModelSerializer):
-    user_detail = UserSerializer(source="user_id", read_only=True)
-    collector_detail = UserSerializer(source="collector_id", read_only=True)
+    user_detail = PickupUserSerializer(source="user_id", read_only=True)
+    collector_detail = PickupUserSerializer(source="collector_id", read_only=True)
     waste_type_detail = WasteRateSerializer(source="waste_type", read_only=True)
     waste_type = serializers.PrimaryKeyRelatedField(
         queryset=RubbishDetail.objects.filter(is_active=True),
