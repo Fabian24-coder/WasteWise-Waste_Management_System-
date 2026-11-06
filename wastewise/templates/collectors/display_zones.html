@@ -1,0 +1,75 @@
+{% extends "base/base.html" %}
+{% block title %}Zones{% endblock %}
+{% block breadcrumb %}Zones{% endblock %}
+{% block content %}
+<section class="intro">
+  <div>
+    <label>ADMINISTRATION</label>
+    <h1>Service zones</h1>
+    <p>Manage the areas that collectors are assigned to.</p>
+  </div>
+  <button class="btn primary" type="button" id="add-zone-btn">＋ Add zone</button></section>
+
+<section class="panel form-panel" id="add-zone" {% if not create_zone.errors %}hidden{% endif %}>  <div class="table-toolbar"><div><h2>Add zone</h2></div></div>
+  <form method="post" class="form-grid">
+    {% csrf_token %}
+    {% for field in create_zone %}
+      <label for="{{ field.id_for_label }}">{{ field.label }}
+        {{ field }}
+        {% for error in field.errors %}<span class="field-error">{{ error }}</span>{% endfor %}
+      </label>
+    {% endfor %}
+    <div class="actions">
+      <button class="btn primary" type="submit">Save zone</button>
+      <button class="btn secondary" type="button" id="cancel-zone-btn">Cancel</button>    </div>
+  </form>
+</section>
+
+<section class="panel">
+  <div class="table-toolbar">
+    <div><h2>All zones</h2><p>{{ display_zones.paginator.count }} zone{{ display_zones.paginator.count|pluralize }}</p></div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Name</th><th>Description</th><th>Collectors</th><th>Actions</th></tr></thead>
+      <tbody>
+        {% for zone in display_zones %}
+          <tr>
+            <td>{{ zone.name }}</td>
+            <td>{{ zone.description|default:"—" }}</td>
+            <td>{{ zone.collectors.count }}</td>
+            <td class="request-actions">
+              <a class="row-action" href="{% url 'collectors:update_zone' zone.id %}">Edit</a>
+              <form method="post" action="{% url 'collectors:delete_zone' zone.id %}"
+                    onsubmit="return confirm('Delete zone {{ zone.name }}?');">
+                {% csrf_token %}
+                <button class="row-action delete" type="submit">Delete</button>
+              </form>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td class="empty" colspan="4">No zones yet. Add the first one above.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+{% if display_zones.paginator.num_pages > 1 %}
+  <nav class="pagination" aria-label="Pagination">
+    {% if display_zones.has_previous %}<a href="?page={{ display_zones.previous_page_number }}">← Previous</a>{% endif %}
+    <span>Page {{ display_zones.number }} of {{ display_zones.paginator.num_pages }}</span>
+    {% if display_zones.has_next %}<a href="?page={{ display_zones.next_page_number }}">Next →</a>{% endif %}
+  </nav>
+{% endif %}
+<script>
+  const zoneForm = document.getElementById("add-zone");
+  document.getElementById("add-zone-btn").addEventListener("click", () => {
+    zoneForm.hidden = false;
+    zoneForm.querySelector("input").focus();
+  });
+  document.getElementById("cancel-zone-btn").addEventListener("click", () => {
+    zoneForm.hidden = true;
+  });
+</script>
+{% endblock %}

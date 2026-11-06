@@ -1,0 +1,89 @@
+{% extends "base/base.html" %}
+{% block title %}Collectors{% endblock %}
+{% block breadcrumb %}Collectors{% endblock %}
+{% block content %}
+<section class="intro">
+  <div>
+    <label>ADMINISTRATION</label>
+    <h1>Collectors</h1>
+    <p>Register collectors, assign their zones and manage their availability.</p>
+  </div>
+  <button class="btn primary" type="button" id="add-collector-btn">＋ Add collector</button>
+</section>
+
+<section class="panel form-panel" id="add-collector" {% if not create_collector.errors %}hidden{% endif %}>
+  <div class="table-toolbar">
+    <div><h2>Add collector</h2><p>Only users with the collector role who don't have a profile yet are listed.</p></div>
+  </div>
+  <form method="post" class="form-grid">
+    {% csrf_token %}
+    {% for field in create_collector %}
+      <label for="{{ field.id_for_label }}">{{ field.label }}
+        {{ field }}
+        {% for error in field.errors %}<span class="field-error">{{ error }}</span>{% endfor %}
+      </label>
+    {% endfor %}
+    <div class="actions">
+      <button class="btn primary" type="submit">Save collector</button>
+      <button class="btn secondary" type="button" id="cancel-collector-btn">Cancel</button>
+    </div>
+  </form>
+</section>
+
+<section class="panel">
+  <div class="table-toolbar">
+    <div><h2>All collectors</h2><p>{{ display_collectors.paginator.count }} collector{{ display_collectors.paginator.count|pluralize }}</p></div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Collector</th><th>Phone</th><th>Zone</th><th>Status</th><th>Available</th><th>Actions</th></tr>
+      </thead>
+      <tbody>
+        {% for collector in display_collectors %}
+          <tr>
+            <td>{{ collector }}<br><small>{{ collector.user.email }}</small></td>
+            <td>{{ collector.phone_number }}</td>
+            <td>{{ collector.zone.name|default:"Not assigned" }}</td>
+            <td>
+              <span class="status {% if collector.status == 'active' %}status-accepted{% elif collector.status == 'suspended' %}status-declined{% else %}status-pending{% endif %}">
+                {{ collector.get_status_display }}
+              </span>
+            </td>
+            <td>{{ collector.is_available|yesno:"Yes,No" }}</td>
+            <td class="request-actions">
+              <a class="row-action" href="{% url 'collectors:update_collector' collector.id %}">Edit</a>
+              <form method="post" action="{% url 'collectors:delete_collector' collector.id %}"
+                    onsubmit="return confirm('Delete collector {{ collector }}?');">
+                {% csrf_token %}
+                <button class="row-action delete" type="submit">Delete</button>
+              </form>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td class="empty" colspan="6">No collectors yet. Click "Add collector" to register one.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+{% if display_collectors.paginator.num_pages > 1 %}
+  <nav class="pagination" aria-label="Pagination">
+    {% if display_collectors.has_previous %}<a href="?page={{ display_collectors.previous_page_number }}">← Previous</a>{% endif %}
+    <span>Page {{ display_collectors.number }} of {{ display_collectors.paginator.num_pages }}</span>
+    {% if display_collectors.has_next %}<a href="?page={{ display_collectors.next_page_number }}">Next →</a>{% endif %}
+  </nav>
+{% endif %}
+
+<script>
+  const collectorForm = document.getElementById("add-collector");
+  document.getElementById("add-collector-btn").addEventListener("click", () => {
+    collectorForm.hidden = false;
+    collectorForm.querySelector("select").focus();
+  });
+  document.getElementById("cancel-collector-btn").addEventListener("click", () => {
+    collectorForm.hidden = true;
+  });
+</script>
+{% endblock %}
