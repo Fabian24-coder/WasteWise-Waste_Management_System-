@@ -1,4 +1,7 @@
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
+from django.shortcuts import render
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
@@ -73,3 +76,14 @@ def payment_delete(request, pk):
     payment = get_object_or_404(Payment, pk=pk)
     payment.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+# payment pages
+@login_required
+def payments_page(request):
+    payments = payments_for(request.user).select_related('request__waste_type')
+    page_obj = Paginator(payments, 10).get_page(request.GET.get("page"))
+    context = {
+        "payments": page_obj,
+        "active_page": "payments",
+    }
+    return render(request, "payments/display_payments.html", context)

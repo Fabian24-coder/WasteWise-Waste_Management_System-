@@ -25,6 +25,7 @@
           {% if request.user.role == "requestor" %}
             <a class="nav-link{% if active_page == 'create_request' %} active{% endif %}" href="{% url 'pickups:place_pickup_request_views' %}"><span>＋</span>New request</a>
           {% endif %}
+                    <a class="nav-link{% if active_page == 'payments' %} active{% endif %}" href="{% url 'payments_page' %}"><span>₵</span>Payments</a>
           {% if request.user.role == "admin" or request.user.is_superuser %}
             <a class="nav-link{% if active_page == 'waste' %} active{% endif %}" href="{% url 'rubbish_list' %}"><span>▤</span>Waste rates</a>
                         <a class="nav-link{% if active_page == 'collectors' %} active{% endif %}" href="{% url 'collectors:display_collectors' %}"><span>⛟</span>Collectors</a>
@@ -52,13 +53,13 @@
         <div class="content">
   {% else %}
     <div class="auth-art">
-      <a class="brand" href="{% url 'web_login' %}"><span class="logo">C</span><span>Clean<span>City</span></span></a>
+      <a class="brand" href="{% url 'web_login' %}"><span class="logo">W</span><span>Waste<span>Wise</span></span></a>
       <h2>Cleaner streets.<br>Better communities.</h2>
       <p>A simple workspace for managing rubbish, pickups, collectors and payments.</p>
     </div>
     <main class="auth-main">
       <div class="auth-card">
-        <a class="brand dark" href="{% url 'web_login' %}"><span class="logo">C</span><span>Clean<span>City</span></span></a>
+        <a class="brand dark" href="{% url 'web_login' %}"><span class="logo">W</span><span>Waste<span>Wise</span></span></a>
   {% endif %}
         {% if messages %}
           {% for message in messages %}

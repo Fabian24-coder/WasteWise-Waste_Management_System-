@@ -24,13 +24,13 @@ class CollectorApiTests(APITestCase):
         )
 
     def test_zone_and_collector_reads_require_authentication(self):
-        self.assertEqual(self.client.get(reverse("display_zones")).status_code, 401)
-        self.assertEqual(self.client.get(reverse("display_collectors")).status_code, 401)
+        self.assertEqual(self.client.get(reverse("collectors:api_display_zones")).status_code, 401)
+        self.assertEqual(self.client.get(reverse("collectors:api_display_collectors")).status_code, 401)
 
     def test_only_admin_can_manage_zones(self):
         self.client.force_authenticate(self.requestor)
         response = self.client.post(
-            reverse("zone_create"),
+            reverse("collectors:api_zone_create"),
             {"name": "North", "description": ""},
             format="json",
         )
@@ -38,7 +38,7 @@ class CollectorApiTests(APITestCase):
 
         self.client.force_authenticate(self.admin)
         response = self.client.post(
-            reverse("zone_create"),
+            reverse("collectors:api_zone_create"),
             {"name": "North", "description": ""},
             format="json",
         )
@@ -48,7 +48,7 @@ class CollectorApiTests(APITestCase):
     def test_collector_profile_requires_collector_role(self):
         self.client.force_authenticate(self.admin)
         response = self.client.post(
-            reverse("collector_create"),
+            reverse("collectors:api_collector_create"),
             {"user": self.requestor.pk, "phone_number": "555-0100"},
             format="json",
         )
@@ -56,7 +56,7 @@ class CollectorApiTests(APITestCase):
         self.assertFalse(Collector.objects.exists())
 
         response = self.client.post(
-            reverse("collector_create"),
+            reverse("collectors:api_collector_create"),
             {"user": self.collector_user.pk, "phone_number": "555-0100"},
             format="json",
         )
