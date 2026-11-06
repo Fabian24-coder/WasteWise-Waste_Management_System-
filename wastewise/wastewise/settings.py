@@ -168,7 +168,8 @@ SPECTACULAR_SETTINGS = {
     'SORT_OPERATIONS': True,
     'TAGS': [
         {'name': 'Zones', 'description': 'Service areas that collectors are assigned to'},
-        {'name': 'Collectors', 'description': 'Collector profiles: phone, zone, status and availability'},
+        {'name': 'Collectors',
+            'description': 'Collector profiles: phone, zone, status and availability'},
         {'name': 'Payments', 'description': 'Cash and mobile money payments for pickups'},
     ],
 }
@@ -183,4 +184,13 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 STORAGES = {
     'default': {'BACKEND': 'django.core.files.storage.FileSystemStorage'},
     'staticfiles': {'BACKEND': 'whitenoise.storage.CompressedStaticFilesStorage'},
+}
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {"console": {"class": "logging.StreamHandler"}},
+    "root": {"handlers": ["console"], "level": "INFO"},
+    "loggers": {
+        "django.request": {"handlers": ["console"], "level": "ERROR", "propagate": False},
+    },
 }
