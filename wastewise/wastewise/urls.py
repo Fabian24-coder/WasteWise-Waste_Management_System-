@@ -22,7 +22,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('pickups/', include('pickups.urls')),  # Include the pickups app URLs
     path('rubbish/', include('rubbish.urls')), # Include the rubbish management app URLs
-    path('api/', include('collectors.urls')),
+    path('', include('collectors.urls')), # Include the collectors app URLs
+    path('api/', include('payments.urls')), # Include the payments app URLs
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path('api/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),

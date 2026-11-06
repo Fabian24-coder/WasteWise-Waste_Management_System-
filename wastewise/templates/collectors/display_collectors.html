@@ -1,0 +1,81 @@
+{% extends 'rubbish/base.html' %}
+
+{% block title %}Collectors{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2>Collectors</h2>
+  <a href="{% url 'collectors:display_zones' %}" class="btn btn-outline-success">Manage Zones</a>
+</div>
+
+<div class="row">
+  <!-- Left: create form -->
+  <div class="col-md-4 mb-4">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Add Collector</h5>
+        <form method="post">
+          {% csrf_token %}
+          {{ create_collector.as_p }}
+          <button type="submit" class="btn btn-success">Save</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right: list -->
+  <div class="col-md-8">
+    <table class="table table-striped bg-white">
+      <thead>
+        <tr>
+          <th>Name</th><th>Phone</th><th>Zone</th><th>Status</th><th>Available</th><th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for collector in display_collectors %}
+          <tr>
+            <td>{{ collector }}</td>
+            <td>{{ collector.phone_number }}</td>
+            <td>{{ collector.zone.name|default:"—" }}</td>
+            <td>
+              {% if collector.status == 'active' %}
+                <span class="badge bg-success">{{ collector.get_status_display }}</span>
+              {% elif collector.status == 'suspended' %}
+                <span class="badge bg-danger">{{ collector.get_status_display }}</span>
+              {% else %}
+                <span class="badge bg-warning text-dark">{{ collector.get_status_display }}</span>
+              {% endif %}
+            </td>
+            <td>{{ collector.is_available|yesno:"Yes,No" }}</td>
+            <td>
+              <a href="{% url 'collectors:update_collector' collector.id %}" class="btn btn-sm btn-primary">Edit</a>
+              <form method="post" action="{% url 'collectors:delete_collector' collector.id %}" class="d-inline"
+                    onsubmit="return confirm('Delete this collector?');">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+              </form>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="6">No collectors yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <!-- Pagination -->
+    {% if display_collectors.has_other_pages %}
+      <nav>
+        <ul class="pagination">
+          {% if display_collectors.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ display_collectors.previous_page_number }}">Previous</a></li>
+          {% endif %}
+          <li class="page-item disabled"><span class="page-link">Page {{ display_collectors.number }} of {{ display_collectors.paginator.num_pages }}</span></li>
+          {% if display_collectors.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ display_collectors.next_page_number }}">Next</a></li>
+          {% endif %}
+        </ul>
+      </nav>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

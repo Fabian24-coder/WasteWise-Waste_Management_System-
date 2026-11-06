@@ -1,0 +1,65 @@
+{% extends 'rubbish/base.html' %}
+
+{% block title %}Zones{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Zones</h2>
+
+<div class="row">
+  <!-- Left: create form -->
+  <div class="col-md-4 mb-4">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Add Zone</h5>
+        <form method="post">
+          {% csrf_token %}
+          {{ create_zone.as_p }}
+          <button type="submit" class="btn btn-success">Save</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right: list -->
+  <div class="col-md-8">
+    <table class="table table-striped bg-white">
+      <thead>
+        <tr><th>Name</th><th>Description</th><th>Actions</th></tr>
+      </thead>
+      <tbody>
+        {% for zone in display_zones %}
+          <tr>
+            <td>{{ zone.name }}</td>
+            <td>{{ zone.description }}</td>
+            <td>
+              <a href="{% url 'collectors:update_zone' zone.id %}" class="btn btn-sm btn-primary">Edit</a>
+              <form method="post" action="{% url 'collectors:delete_zone' zone.id %}" class="d-inline"
+                    onsubmit="return confirm('Delete this zone?');">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+              </form>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="3">No zones yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <!-- Pagination -->
+    {% if display_zones.has_other_pages %}
+      <nav>
+        <ul class="pagination">
+          {% if display_zones.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ display_zones.previous_page_number }}">Previous</a></li>
+          {% endif %}
+          <li class="page-item disabled"><span class="page-link">Page {{ display_zones.number }} of {{ display_zones.paginator.num_pages }}</span></li>
+          {% if display_zones.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ display_zones.next_page_number }}">Next</a></li>
+          {% endif %}
+        </ul>
+      </nav>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
