@@ -1,0 +1,54 @@
+{% extends "base/base.html" %}
+{% block title %}Payments{% endblock %}
+{% block breadcrumb %}Payments{% endblock %}
+{% block content %}
+<section class="intro">
+  <div>
+    <label>BILLING</label>
+    <h1>Payments</h1>
+    <p>Payments are recorded automatically when a pickup is marked as paid.</p>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="table-toolbar">
+    <div><h2>Payment history</h2><p>{{ payments.paginator.count }} payment{{ payments.paginator.count|pluralize }}</p></div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Pickup</th><th>Resident</th><th>Amount</th><th>Method</th><th>Reference</th><th>Status</th><th>Date</th></tr></thead>
+      <tbody>
+        {% for payment in payments %}
+          <tr>
+            <td>#{{ payment.request.id }} · {{ payment.request.waste_type.name }}</td>
+            <td>{{ payment.request.contact_name }}</td>
+            <td>{{ payment.amount }}</td>
+            <td>{{ payment.get_payment_method_display }}</td>
+            <td>{{ payment.transaction_reference|default:"—" }}</td>
+            <td>
+              {% if payment.payment_status == "completed" %}
+                <span class="status status-accepted">Completed</span>
+              {% elif payment.payment_status == "failed" %}
+                <span class="status status-declined">Failed</span>
+              {% else %}
+                <span class="status status-pending">Pending</span>
+              {% endif %}
+            </td>
+            <td>{{ payment.payment_date|date:"d M Y, H:i" }}</td>
+          </tr>
+        {% empty %}
+          <tr><td class="empty" colspan="7">No payments yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+{% if payments.paginator.num_pages > 1 %}
+  <nav class="pagination" aria-label="Pagination">
+    {% if payments.has_previous %}<a href="?page={{ payments.previous_page_number }}">← Previous</a>{% endif %}
+    <span>Page {{ payments.number }} of {{ payments.paginator.num_pages }}</span>
+    {% if payments.has_next %}<a href="?page={{ payments.next_page_number }}">Next →</a>{% endif %}
+  </nav>
+{% endif %}
+{% endblock %}

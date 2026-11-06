@@ -25,6 +25,7 @@
           {% if request.user.role == "requestor" %}
             <a class="nav-link{% if active_page == 'create_request' %} active{% endif %}" href="{% url 'pickups:place_pickup_request_views' %}"><span>＋</span>New request</a>
           {% endif %}
+                    <a class="nav-link{% if active_page == 'payments' %} active{% endif %}" href="{% url 'payments_page' %}"><span>₵</span>Payments</a>
           {% if request.user.role == "admin" or request.user.is_superuser %}
             <a class="nav-link{% if active_page == 'waste' %} active{% endif %}" href="{% url 'rubbish_list' %}"><span>▤</span>Waste rates</a>
                         <a class="nav-link{% if active_page == 'collectors' %} active{% endif %}" href="{% url 'collectors:display_collectors' %}"><span>⛟</span>Collectors</a>
