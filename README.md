@@ -23,7 +23,7 @@ This project aims to:
 #
 # Request and collection workflow
 
-- The server-rendered Django pages use the CleanCity styles from [WastewiseSystemTeam/WasteWise-Waste_Management_System-#6](https://github.com/WastewiseSystemTeam/WasteWise-Waste_Management_System-/pull/6). Dashboard, request, sign-in, registration, and admin rate pages use the Django database and session authentication; the prototype's LocalStorage demo behavior is not used.
+- The server-rendered Django pages use the WasteWise styles from [WastewiseSystemTeam/WasteWise-Waste_Management_System-#6](https://github.com/WastewiseSystemTeam/WasteWise-Waste_Management_System-/pull/6). Dashboard, request, sign-in, registration, and admin rate pages use the Django database and session authentication; the prototype's LocalStorage demo behavior is not used.
 - Requestors can register at `/accounts/register/`, sign in at `/accounts/login/`, and submit collection requests from the pickup dashboard. Each request records contact details, address, requested collection date, waste type, quantity, and estimated distance in kilometres.
 - Admins maintain the waste rate table in Django Admin or the Waste Types page. Each waste type has a price per unit and an additional distance charge per kilometre. The quoted fee is `(quantity × unit rate) + (distance in km × distance rate per km)`. Rates and the calculated fee are saved with the request so later rate changes do not alter existing quotes. Configure rates in the project's chosen currency; no currency is assumed by the application.
 - A new request starts with status `new` and payment method `cash`. Collectors can accept it with a scheduled date/time and message, or decline it with a reason. Requestors see that update on their dashboard.
