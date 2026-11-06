@@ -32,7 +32,7 @@ This project aims to:
 
 # API workflow
 
-All API routes are under `/pickups/api/v1/` and require authentication. Register and obtain a token using `/api/auth/register/` and `/api/auth/login/`; send the token as `Authorization: Token <token>`.
+Pickup API routes are under `/pickups/api/v1/` and require authentication. Register and obtain a token using `/api/auth/register/` and `/api/auth/login/`; send the token as `Authorization: Token <token>`. Swagger UI also supports the token through its **Authorize** button. Public registration creates requestor accounts only.
 
 - `GET waste-rates/` lists active waste types and rates.
 - `POST create/` creates a request. Supply `contact_name`, `contact_number`, `address`, `collection_date` (`YYYY-MM-DD`), `waste_type` (rate-table ID), `quantity`, and `distance_km`.
@@ -40,6 +40,8 @@ All API routes are under `/pickups/api/v1/` and require authentication. Register
 - `POST <id>/decision/` lets a collector accept (`action: "accept"` plus `scheduled_collection_at`) or decline (`action: "decline"` plus `decline_reason`). An optional `collector_message` is shown to the requestor.
 - `POST <id>/payment/` confirms cash payment for the requestor's own accepted request on the scheduled day.
 - `POST <id>/confirm-collection/` confirms collection after payment on the scheduled day.
+- `PUT`/`PATCH update/<id>/` and `DELETE delete/<id>/` are admin-only.
+- Authenticated users can read `/api/zones/` and `/api/collectors/`; zone and collector profile changes are admin-only. A collector profile must reference a user with the collector role.
 - The interactive API schema is available at `/api/docs/`.
 #
 # Attached is the Entity Relation Diagram(ERD)

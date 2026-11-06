@@ -11,6 +11,7 @@ from rest_framework import serializers, status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from drf_spectacular.utils import OpenApiResponse, extend_schema
 
 from accounts.permissions import IsAdminRole, IsCollector, IsRequestor
 from rubbish.models import RubbishDetail
@@ -18,6 +19,31 @@ from .forms import CollectorDecisionForm, CreatePickUpRequestForm
 from .models import pickup_request
 from .serializers import PickUpRequestSerializer, WasteRateSerializer
 from .services import confirm_collection, decide_request, mark_payment_received
+
+
+class CollectorDecisionSerializer(serializers.Serializer):
+    action = serializers.ChoiceField(choices=("accept", "decline"))
+    scheduled_collection_at = serializers.DateTimeField(required=False)
+    decline_reason = serializers.CharField(required=False, allow_blank=True)
+    collector_message = serializers.CharField(required=False, allow_blank=True)
+
+    def validate(self, attrs):
+        if attrs["action"] == "accept" and not attrs.get("scheduled_collection_at"):
+            raise serializers.ValidationError({
+                "scheduled_collection_at": "Set the collection date and time."
+            })
+        if (
+            attrs.get("scheduled_collection_at")
+            and attrs["scheduled_collection_at"] <= timezone.now()
+        ):
+            raise serializers.ValidationError({
+                "scheduled_collection_at": "Choose a future collection time."
+            })
+        if attrs["action"] == "decline" and not attrs.get("decline_reason", "").strip():
+            raise serializers.ValidationError({
+                "decline_reason": "Give a reason for declining this request."
+            })
+        return attrs
 
 
 def _request_role_allowed(user):
@@ -83,6 +109,15 @@ def pickup_request_views(request):
     })
 
 
+@extend_schema(
+    tags=["Pickup requests"],
+    summary="List pickup requests",
+    description=(
+        "Collectors and admins see all requests. Requestors see only their own "
+        "requests. Requires token authentication."
+    ),
+    responses={200: PickUpRequestSerializer(many=True), 403: OpenApiResponse(description="Unsupported account role")},
+)
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def api_pickup_request_list(request):
@@ -98,6 +133,11 @@ def api_pickup_request_list(request):
     return Response(serializer.data)
 
 
+@extend_schema(
+    tags=["Waste rates"],
+    summary="List active waste rates",
+    responses={200: WasteRateSerializer(many=True)},
+)
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def api_waste_rates(request):
@@ -127,6 +167,22 @@ def place_pickUp_request_Views(request):
     })
 
 
+@extend_schema(
+    tags=["Pickup requests"],
+    summary="Create a pickup request",
+    description=(
+        "Creates a new cash-on-collection request for the authenticated requestor. "
+        "The server calculates and stores the quote using the selected waste rate "
+        "and distance."
+    ),
+    request=PickUpRequestSerializer,
+    responses={
+        201: PickUpRequestSerializer,
+        400: OpenApiResponse(description="Invalid request data"),
+        401: OpenApiResponse(description="Authentication required"),
+        403: OpenApiResponse(description="Requestor role required"),
+    },
+)
 @api_view(["POST"])
 @permission_classes([IsRequestor])
 def api_place_pickup_request(request):
@@ -162,31 +218,21 @@ def update_pickup_requests(request, pickup_request_id):
     })
 
 
-class CollectorDecisionSerializer(serializers.Serializer):
-    action = serializers.ChoiceField(choices=("accept", "decline"))
-    scheduled_collection_at = serializers.DateTimeField(required=False)
-    decline_reason = serializers.CharField(required=False, allow_blank=True)
-    collector_message = serializers.CharField(required=False, allow_blank=True)
-
-    def validate(self, attrs):
-        if attrs["action"] == "accept" and not attrs.get("scheduled_collection_at"):
-            raise serializers.ValidationError({
-                "scheduled_collection_at": "Set the collection date and time."
-            })
-        if (
-            attrs.get("scheduled_collection_at")
-            and attrs["scheduled_collection_at"] <= timezone.now()
-        ):
-            raise serializers.ValidationError({
-                "scheduled_collection_at": "Choose a future collection time."
-            })
-        if attrs["action"] == "decline" and not attrs.get("decline_reason", "").strip():
-            raise serializers.ValidationError({
-                "decline_reason": "Give a reason for declining this request."
-            })
-        return attrs
-
-
+@extend_schema(
+    tags=["Pickup requests"],
+    summary="Accept or decline a pickup request",
+    description=(
+        "Collectors can accept a new request by providing a future "
+        "scheduled_collection_at, or decline it with a decline_reason."
+    ),
+    request=CollectorDecisionSerializer,
+    responses={
+        200: PickUpRequestSerializer,
+        400: OpenApiResponse(description="Invalid decision or request state"),
+        403: OpenApiResponse(description="Collector role required"),
+        404: OpenApiResponse(description="Pickup request not found"),
+    },
+)
 @api_view(["POST"])
 @permission_classes([IsCollector])
 def api_decide_pickup_request(request, pickup_request_id):
@@ -201,6 +247,18 @@ def api_decide_pickup_request(request, pickup_request_id):
     return Response(PickUpRequestSerializer(pickup).data)
 
 
+@extend_schema(
+    tags=["Pickup requests"],
+    summary="Confirm cash payment",
+    description="The request owner confirms cash payment on the scheduled collection day.",
+    request=None,
+    responses={
+        200: PickUpRequestSerializer,
+        400: OpenApiResponse(description="Payment is not currently allowed"),
+        403: OpenApiResponse(description="Requestor role required"),
+        404: OpenApiResponse(description="Pickup request not found"),
+    },
+)
 @api_view(["POST"])
 @permission_classes([IsRequestor])
 def api_confirm_payment(request, pickup_request_id):
@@ -212,6 +270,18 @@ def api_confirm_payment(request, pickup_request_id):
     return Response(PickUpRequestSerializer(pickup).data)
 
 
+@extend_schema(
+    tags=["Pickup requests"],
+    summary="Confirm collection",
+    description="The request owner confirms collection after payment on the scheduled day.",
+    request=None,
+    responses={
+        200: PickUpRequestSerializer,
+        400: OpenApiResponse(description="Collection is not currently allowed"),
+        403: OpenApiResponse(description="Requestor role required"),
+        404: OpenApiResponse(description="Pickup request not found"),
+    },
+)
 @api_view(["POST"])
 @permission_classes([IsRequestor])
 def api_confirm_collection(request, pickup_request_id):
@@ -257,6 +327,18 @@ def confirm_pickup_collection(request, pickup_request_id):
     return redirect("pickups:display_pickup_requests")
 
 
+@extend_schema(
+    tags=["Pickup requests"],
+    summary="Update a pickup request",
+    description="Admin-only update. Use PATCH to update selected request fields.",
+    request=PickUpRequestSerializer,
+    responses={
+        200: PickUpRequestSerializer,
+        400: OpenApiResponse(description="Invalid request data"),
+        403: OpenApiResponse(description="Admin role required"),
+        404: OpenApiResponse(description="Pickup request not found"),
+    },
+)
 @api_view(["PUT", "PATCH"])
 @permission_classes([IsAuthenticated, IsAdminRole])
 def api_update_pickup_request(request, pickup_request_id):
@@ -279,6 +361,15 @@ def delete_pickup_request(request, pickup_request_id):
     return redirect("pickups:display_pickup_requests")
 
 
+@extend_schema(
+    tags=["Pickup requests"],
+    summary="Delete a pickup request",
+    responses={
+        204: OpenApiResponse(description="Request deleted"),
+        403: OpenApiResponse(description="Admin role required"),
+        404: OpenApiResponse(description="Pickup request not found"),
+    },
+)
 @api_view(["DELETE"])
 @permission_classes([IsAuthenticated, IsAdminRole])
 def api_delete_pickup_request(request, pickup_request_id):
