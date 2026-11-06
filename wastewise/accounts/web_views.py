@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_POST
+from django.utils.http import url_has_allowed_host_and_scheme
 
 from .web_forms import EmailLoginForm, RegisterForm
 
@@ -37,6 +38,11 @@ def web_login(request):
     form = EmailLoginForm(request.POST or None, request=request)
     if request.method == "POST" and form.is_valid():
         login(request, form.user)
+        next_url = request.GET.get("next")
+        if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}):
+            return redirect(next_url)
+        if form.user.role == "admin" or form.user.is_superuser:
+            return redirect("pickups:dashboard")
         return redirect("pickups:display_pickup_requests")
     return render(request, "accounts/login.html", {
         "form": form,
