@@ -33,3 +33,8 @@ class CollectorSerializer(serializers.ModelSerializer):
             'updated_at',
         ]
         read_only_fields = ['created_at', 'updated_at']
+
+    def validate_user(self, value):
+        if value.role != 'collector':
+            raise serializers.ValidationError('This user does not have the collector role.')
+        return value

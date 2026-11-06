@@ -6,7 +6,7 @@ from import_export.admin import ImportExportModelAdmin
 
 class PaymentAdmin(ImportExportModelAdmin):
     list_display = [
-        'id', 'request', 'amount', 'payment_method', 'payment_status', 'payment_date'
+        'id', 'request', 'amount', 'payment_method', 'payment_status', 'transaction_reference', 'payment_date'
     ]
 
 

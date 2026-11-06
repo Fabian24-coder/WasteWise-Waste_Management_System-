@@ -1,65 +1,75 @@
-{% extends 'rubbish/base.html' %}
-
+{% extends "base/base.html" %}
 {% block title %}Zones{% endblock %}
-
+{% block breadcrumb %}Zones{% endblock %}
 {% block content %}
-<h2 class="mb-4">Zones</h2>
-
-<div class="row">
-  <!-- Left: create form -->
-  <div class="col-md-4 mb-4">
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">Add Zone</h5>
-        <form method="post">
-          {% csrf_token %}
-          {{ create_zone.as_p }}
-          <button type="submit" class="btn btn-success">Save</button>
-        </form>
-      </div>
-    </div>
+<section class="intro">
+  <div>
+    <label>ADMINISTRATION</label>
+    <h1>Service zones</h1>
+    <p>Manage the areas that collectors are assigned to.</p>
   </div>
+  <button class="btn primary" type="button" id="add-zone-btn">＋ Add zone</button></section>
 
-  <!-- Right: list -->
-  <div class="col-md-8">
-    <table class="table table-striped bg-white">
-      <thead>
-        <tr><th>Name</th><th>Description</th><th>Actions</th></tr>
-      </thead>
+<section class="panel form-panel" id="add-zone" {% if not create_zone.errors %}hidden{% endif %}>  <div class="table-toolbar"><div><h2>Add zone</h2></div></div>
+  <form method="post" class="form-grid">
+    {% csrf_token %}
+    {% for field in create_zone %}
+      <label for="{{ field.id_for_label }}">{{ field.label }}
+        {{ field }}
+        {% for error in field.errors %}<span class="field-error">{{ error }}</span>{% endfor %}
+      </label>
+    {% endfor %}
+    <div class="actions">
+      <button class="btn primary" type="submit">Save zone</button>
+      <button class="btn secondary" type="button" id="cancel-zone-btn">Cancel</button>    </div>
+  </form>
+</section>
+
+<section class="panel">
+  <div class="table-toolbar">
+    <div><h2>All zones</h2><p>{{ display_zones.paginator.count }} zone{{ display_zones.paginator.count|pluralize }}</p></div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Name</th><th>Description</th><th>Collectors</th><th>Actions</th></tr></thead>
       <tbody>
         {% for zone in display_zones %}
           <tr>
             <td>{{ zone.name }}</td>
-            <td>{{ zone.description }}</td>
-            <td>
-              <a href="{% url 'collectors:update_zone' zone.id %}" class="btn btn-sm btn-primary">Edit</a>
-              <form method="post" action="{% url 'collectors:delete_zone' zone.id %}" class="d-inline"
-                    onsubmit="return confirm('Delete this zone?');">
+            <td>{{ zone.description|default:"—" }}</td>
+            <td>{{ zone.collectors.count }}</td>
+            <td class="request-actions">
+              <a class="row-action" href="{% url 'collectors:update_zone' zone.id %}">Edit</a>
+              <form method="post" action="{% url 'collectors:delete_zone' zone.id %}"
+                    onsubmit="return confirm('Delete zone {{ zone.name }}?');">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                <button class="row-action delete" type="submit">Delete</button>
               </form>
             </td>
           </tr>
         {% empty %}
-          <tr><td colspan="3">No zones yet.</td></tr>
+          <tr><td class="empty" colspan="4">No zones yet. Add the first one above.</td></tr>
         {% endfor %}
       </tbody>
     </table>
-
-    <!-- Pagination -->
-    {% if display_zones.has_other_pages %}
-      <nav>
-        <ul class="pagination">
-          {% if display_zones.has_previous %}
-            <li class="page-item"><a class="page-link" href="?page={{ display_zones.previous_page_number }}">Previous</a></li>
-          {% endif %}
-          <li class="page-item disabled"><span class="page-link">Page {{ display_zones.number }} of {{ display_zones.paginator.num_pages }}</span></li>
-          {% if display_zones.has_next %}
-            <li class="page-item"><a class="page-link" href="?page={{ display_zones.next_page_number }}">Next</a></li>
-          {% endif %}
-        </ul>
-      </nav>
-    {% endif %}
   </div>
-</div>
+</section>
+
+{% if display_zones.paginator.num_pages > 1 %}
+  <nav class="pagination" aria-label="Pagination">
+    {% if display_zones.has_previous %}<a href="?page={{ display_zones.previous_page_number }}">← Previous</a>{% endif %}
+    <span>Page {{ display_zones.number }} of {{ display_zones.paginator.num_pages }}</span>
+    {% if display_zones.has_next %}<a href="?page={{ display_zones.next_page_number }}">Next →</a>{% endif %}
+  </nav>
+{% endif %}
+<script>
+  const zoneForm = document.getElementById("add-zone");
+  document.getElementById("add-zone-btn").addEventListener("click", () => {
+    zoneForm.hidden = false;
+    zoneForm.querySelector("input").focus();
+  });
+  document.getElementById("cancel-zone-btn").addEventListener("click", () => {
+    zoneForm.hidden = true;
+  });
+</script>
 {% endblock %}

@@ -149,8 +149,14 @@ REST_FRAMEWORK = {
 # API documentation (drf-spectacular)
 SPECTACULAR_SETTINGS = {
     'TITLE': 'WasteWise APIs',
-    'DESCRIPTION': 'API for the WasteWise waste management system',
+    'DESCRIPTION': 'API for the WasteWise; waste management system',
     'VERSION': '1.0.0',
+        'TAGS': [
+        # {'name': 'Pickups', 'description': 'Pickup requests: residents request collection, collectors accept or decline, and residents confirm payment and collection'},
+        {'name': 'Zones', 'description': 'Service areas that collectors are assigned to'},
+        {'name': 'Collectors', 'description': 'Collector profiles: phone, zone, status and availability'},
+        {'name': 'Payments', 'description': 'Cash and mobile money payments for pickups'},
+    ],
 }
 
 

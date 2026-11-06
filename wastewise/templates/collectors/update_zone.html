@@ -1,21 +1,28 @@
-{% extends 'rubbish/base.html' %}
-
-{% block title %}Edit Zone{% endblock %}
-
+{% extends "base/base.html" %}
+{% block title %}Edit zone{% endblock %}
+{% block breadcrumb %}Zones{% endblock %}
 {% block content %}
-<div class="row justify-content-center">
-  <div class="col-md-6">
-    <div class="card">
-      <div class="card-body">
-        <h4 class="card-title mb-3">Edit Zone</h4>
-        <form method="post">
-          {% csrf_token %}
-          {{ update_zone.as_p }}
-          <button type="submit" class="btn btn-success">Save changes</button>
-          <a href="{% url 'collectors:display_zones' %}" class="btn btn-secondary">Cancel</a>
-        </form>
-      </div>
-    </div>
+<section class="intro">
+  <div>
+    <label>ADMINISTRATION</label>
+    <h1>Edit zone: {{ update_zone.initial.name }}</h1>
+    <p>Change the zone's name or description. Collectors in this zone keep their assignment.</p>
   </div>
-</div>
+</section>
+
+<section class="panel form-panel">
+  <form method="post" class="form-grid">
+    {% csrf_token %}
+    {% for field in update_zone %}
+      <label for="{{ field.id_for_label }}">{{ field.label }}
+        {{ field }}
+        {% for error in field.errors %}<span class="field-error">{{ error }}</span>{% endfor %}
+      </label>
+    {% endfor %}
+    <div class="actions">
+      <button class="btn primary" type="submit">Save changes</button>
+      <a class="btn secondary" href="{% url 'collectors:display_zones' %}">Cancel</a>
+    </div>
+  </form>
+</section>
 {% endblock %}

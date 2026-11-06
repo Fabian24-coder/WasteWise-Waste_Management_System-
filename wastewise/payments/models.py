@@ -20,6 +20,7 @@ class Payment(models.Model):
     payment_method = models.CharField(max_length=20, choices=METHOD_OPTIONS, default='cash')
     payment_date = models.DateTimeField(default=timezone.now)
     payment_status = models.CharField(max_length=20, choices=STATUS_OPTIONS, default='pending')
+    transaction_reference = models.CharField(max_length=50, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
