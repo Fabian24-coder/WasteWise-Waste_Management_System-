@@ -17,3 +17,5 @@ tzdata==2026.4
 uritemplate==4.2.0
 dj-database-url
 whitenoise
+gunicorn
+psycopg[binary]
