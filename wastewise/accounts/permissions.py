@@ -9,8 +9,12 @@ class RolePermission(BasePermission):
         return bool(user and user.is_authenticated and user.role == self.role)
 
 
-class IsResident(RolePermission):
-    role = "resident"
+class IsRequestor(RolePermission):
+    role = "requestor"
+
+
+class IsResident(IsRequestor):
+    pass
 
 
 class IsCollector(RolePermission):
@@ -19,3 +23,10 @@ class IsCollector(RolePermission):
 
 class IsAdminRole(RolePermission):
     role = "admin"
+
+    def has_permission(self, request, view):
+        return bool(
+            request.user
+            and request.user.is_authenticated
+            and (request.user.role == self.role or request.user.is_superuser)
+        )

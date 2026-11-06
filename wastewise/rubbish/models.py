@@ -20,6 +20,11 @@ class RubbishDetail(models.Model):
     name = models.CharField(max_length=100)
     rate = models.DecimalField(max_digits=10, decimal_places=2,
                                validators=[MinValueValidator(0)])
+    distance_rate_per_km = models.DecimalField(
+        max_digits=10, decimal_places=2, default=0,
+        validators=[MinValueValidator(0)],
+        help_text="Additional collection charge per kilometre",
+    )
     unit = models.CharField(max_length=10, choices=UNIT_CHOICES, default='kg')
     weight = models.DecimalField(max_digits=8, decimal_places=2, null=True,
                                  blank=True, validators=[MinValueValidator(0)],

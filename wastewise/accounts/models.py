@@ -29,14 +29,14 @@ class UserManager(BaseUserManager):
 
 class User(AbstractUser):
     ROLE_CHOICES = [
-        ("resident", "Resident"),
+        ("requestor", "Requestor"),
         ("collector", "Collector"),
         ("admin", "Admin"),
     ]
 
     username = None  # we log in with email instead
     email = models.EmailField(unique=True)
-    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default="resident")
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default="requestor")
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []

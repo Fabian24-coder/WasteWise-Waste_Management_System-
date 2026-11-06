@@ -1,54 +1,97 @@
-{% extends "base/base.html" %} {% block content %}
-
-<h1>Pickup Requests</h1>
-<h2>List of Pickup Requests</h2>
-  <table>
-    <tr>
-    <th>S/N</th>
-    <th>User ID</th>
-    <th>Collector ID</th>
-    <th>Request Date</th>
-    <th>Request Status</th>
-    <th>Collection Date</th>
-    <th colspan="2">Options</th>
-    </tr>
-    {% for pickup_requests in page %}
-
-      <tr>
-       <td>{{ page.start_index|add:forloop.counter0 }}</td>
-      <td>{{ pickup_requests.user_id }}</td>
-      <td>{{ pickup_requests.collector_id }}</td>
-      <td>{{ pickup_requests.request_date }}</td>
-      <td>{{ pickup_requests.request_status }}</td>
-      <td>{{ pickup_requests.collection_date }}</td>
-      <td>
-        <a href="{% url 'pickups:update_pickup_requests' pickup_requests.id %}">edit</a>
-      </td>
-      <td>
-        <a href="{% url 'pickups:delete_pickup_requests' pickup_requests.id %}">delete</a>
-      </td>
-      </tr>
-    
-    {% endfor %}
-  </table>
-  {% if page.paginator.num_pages > 1 %}
-    <p>Showing <span>{{ page.start_index }}</span> to <span>{{ page.end_index }}</span> of <span>{{ page.paginator.count }}</span> records</p>
+{% extends "base/base.html" %}
+{% block title %}Pickup requests{% endblock %}
+{% block breadcrumb %}Pickup requests{% endblock %}
+{% block content %}
+<section class="intro">
+  <div>
+    <label>MANAGEMENT</label>
+    <h1>Pickup requests</h1>
+    <p>{% if request.user.role == "requestor" %}Track your collections and confirm service on pickup day.{% else %}Review requests, schedules, payment, and collection status.{% endif %}</p>
+  </div>
+  {% if request.user.role == "requestor" %}
+    <a class="btn primary" href="{% url 'pickups:place_pickup_request_views' %}">＋ New pickup request</a>
   {% endif %}
-{% if page.has_previous %}
-   <a href="?page=1">First</a>
-   <a href="?page={{ page.previous_page_number }}" ">Previous</a>
-{% endif %}
+</section>
 
-{% for i in page.paginator.page_range %}
-  {% if page.number == i %}
-    <span>{{ i }}</span>
-    {% elif i > page.number|add:'-3' and i < page.number|add:'3' %}
-      <a href="?page={{ i }}">{{ i }}</a>
-  {% endif %}
-{% endfor %}
+<section class="panel">
+  <div class="table-toolbar">
+    <div><h2>All pickup requests</h2><p>{{ page.paginator.count }} record{{ page.paginator.count|pluralize }}</p></div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          {% if request.user.role != "requestor" %}<th>Requestor</th>{% endif %}
+          <th>Collection details</th>
+          <th>Waste</th>
+          <th>Quantity</th>
+          <th>Fee</th>
+          <th>Status</th>
+          <th>Schedule</th>
+          <th>Payment</th>
+          <th>Update / actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for pickup in page %}
+          <tr>
+            {% if request.user.role != "requestor" %}
+              <td>{{ pickup.contact_name }}<br><small>{{ pickup.contact_number }}</small></td>
+            {% endif %}
+            <td>{{ pickup.address }}<br><small>Requested for {{ pickup.collection_date }}</small></td>
+            <td>{{ pickup.waste_type|default:"—" }}</td>
+            <td>
+              {% if pickup.waste_type %}{{ pickup.quantity }} {{ pickup.waste_type.get_unit_display }}{% else %}{{ pickup.quantity }}{% endif %}
+              <br><small>{{ pickup.distance_km }} km</small>
+            </td>
+            <td>{{ pickup.total_fee }}</td>
+            <td><span class="status status-{{ pickup.request_status }}">{{ pickup.get_request_status_display }}</span></td>
+            <td>
+              {% if pickup.scheduled_collection_at %}
+                {{ pickup.scheduled_collection_at|date:"M j, Y" }}<br><small>{{ pickup.scheduled_collection_at|date:"g:i A" }}</small>
+              {% else %}Not scheduled{% endif %}
+            </td>
+            <td>{{ pickup.get_payment_status_display }}</td>
+            <td class="request-actions">
+              {% if request.user.role == "collector" and pickup.request_status == "new" or request.user.role == "collector" and pickup.request_status == "pending" %}
+                <a class="row-action" href="{% url 'pickups:update_pickup_requests' pickup.id %}">Review</a>
+              {% endif %}
+              {% if request.user.role == "requestor" and pickup.request_status == "accepted" and pickup.scheduled_collection_at %}
+                {% if pickup.scheduled_collection_at.date == today %}
+                  {% if pickup.payment_status == "unpaid" %}
+                    <form method="post" action="{% url 'pickups:confirm_payment' pickup.id %}">
+                      {% csrf_token %}<button class="row-action" type="submit">Confirm cash payment</button>
+                    </form>
+                  {% elif pickup.payment_status == "paid" %}
+                    <form method="post" action="{% url 'pickups:confirm_collection' pickup.id %}">
+                      {% csrf_token %}<button class="row-action" type="submit">Confirm collection</button>
+                    </form>
+                  {% endif %}
+                {% endif %}
+              {% endif %}
+              {% if pickup.collector_message %}<p class="request-note">{{ pickup.collector_message }}</p>{% endif %}
+              {% if pickup.decline_reason %}<p class="request-note decline-note">Reason: {{ pickup.decline_reason }}</p>{% endif %}
+              {% if pickup.collection_confirmed_at %}<small>Confirmed {{ pickup.collection_confirmed_at|date:"M j, g:i A" }}</small>{% endif %}
+              {% if request.user.role == "admin" or request.user.is_superuser %}
+                <form method="post" action="{% url 'pickups:delete_pickup_requests' pickup.id %}">
+                  {% csrf_token %}<button class="row-action delete" type="submit">Delete</button>
+                </form>
+              {% endif %}
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td class="empty" colspan="{% if request.user.role == 'requestor' %}8{% else %}9{% endif %}">No pickup requests yet. New requests will appear here.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
 
-{% if page.has_next %}
-   <a href="?page={{ page.next_page_number }}" >Next</a>
-   <a href="?page={{ page.paginator.num_pages }}">Last</a>
+{% if page.paginator.num_pages > 1 %}
+  <nav class="pagination" aria-label="Pagination">
+    {% if page.has_previous %}<a href="?page={{ page.previous_page_number }}">← Previous</a>{% endif %}
+    <span>Page {{ page.number }} of {{ page.paginator.num_pages }}</span>
+    {% if page.has_next %}<a href="?page={{ page.next_page_number }}">Next →</a>{% endif %}
+  </nav>
 {% endif %}
 {% endblock %}

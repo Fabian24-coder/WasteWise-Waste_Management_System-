@@ -155,7 +155,7 @@ SPECTACULAR_SETTINGS = {
 
 
 AUTH_USER_MODEL = "accounts.User"
+LOGIN_URL = "/accounts/login/"
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
-

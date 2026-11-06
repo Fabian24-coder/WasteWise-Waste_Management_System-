@@ -16,10 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from django.views.generic import RedirectView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
 
 urlpatterns = [
+    path('', RedirectView.as_view(pattern_name='pickups:dashboard', permanent=False)),
     path('admin/', admin.site.urls),
+    path('accounts/', include('accounts.web_urls')),
     path('pickups/', include('pickups.urls')),  # Include the pickups app URLs
     path('rubbish/', include('rubbish.urls')), # Include the rubbish management app URLs
     path('api/', include('collectors.urls')),
@@ -30,4 +33,3 @@ urlpatterns = [
     path("api/profile/", include("profiles.urls")),
     
 ]
-

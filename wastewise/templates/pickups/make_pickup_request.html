@@ -1,7 +1,48 @@
-{% extends "base/base.html" %} {% block content %}
-<form action="" method="post">
-  {% csrf_token %} {{ make_pickup_request.as_p }}
-  <button type="submit">Create</button>
-</form>
+{% extends "base/base.html" %}
+{% block title %}New pickup request{% endblock %}
+{% block breadcrumb %}New pickup request{% endblock %}
+{% block content %}
+<section class="intro">
+  <div><label>REQUEST COLLECTION</label><h1>New pickup request</h1><p>Tell us what needs collecting and where to find it.</p></div>
+</section>
 
+<section class="panel form-panel">
+  <div class="panel-head"><div><h2>Collection details</h2><p>The estimate uses the selected waste rate and the distance you enter.</p></div></div>
+  <form method="post" class="form-grid">
+    {% csrf_token %}
+    {% if make_pickup_request.non_field_errors %}<div class="form-errors">{{ make_pickup_request.non_field_errors }}</div>{% endif %}
+    {% for field in make_pickup_request %}
+      <label for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %}<span class="required-mark">*</span>{% endif %}
+        {{ field }}
+        {% if field.help_text %}<small class="help-text">{{ field.help_text }}</small>{% endif %}
+        {% for error in field.errors %}<span class="field-error">{{ error }}</span>{% endfor %}
+      </label>
+    {% endfor %}
+    <div class="form-summary">
+      <b>Payment: cash upon collection</b>
+      <span>Estimated fee = (quantity × rate per unit) + (distance in km × distance rate per km).</span>
+      <span>The final charge is an estimate based on your selected rate and entered distance.</span>
+    </div>
+    <div class="actions">
+      <button class="btn primary" type="submit">Submit request</button>
+      <a class="btn secondary" href="{% url 'pickups:display_pickup_requests' %}">Cancel</a>
+    </div>
+  </form>
+</section>
+
+<section class="panel">
+  <div class="panel-head"><div><h2>Current collection rates</h2><p>Configured by the administrator</p></div></div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Waste</th><th>Category</th><th>Price per unit</th><th>Distance rate / km</th></tr></thead>
+      <tbody>
+        {% for item in waste_rates %}
+          <tr><td>{{ item.name }}</td><td>{{ item.get_category_display }}</td><td>{{ item.rate }} {{ item.get_unit_display }}</td><td>{{ item.distance_rate_per_km }}</td></tr>
+        {% empty %}
+          <tr><td class="empty" colspan="4">No waste rates are configured yet. Contact the administrator.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
 {% endblock %}

@@ -1,8 +1,39 @@
-{% extends "base/base.html" %} {% block content %}
-<h1>Update Pickup Request</h1>
-<form action="" method="post">
-  {% csrf_token %} {{ update_pickup_request.as_p }} {{author_form}}
-  <button type="submit">Update</button>
-  <button><a href="{% url 'pickups:display_pickup_requests' %}">Cancel</a></button>
-</form>
+{% extends "base/base.html" %}
+{% block title %}Review request{% endblock %}
+{% block breadcrumb %}Review request{% endblock %}
+{% block content %}
+<section class="intro">
+  <div><label>COLLECTOR ACTION</label><h1>Review collection request</h1><p>Accept and schedule the pickup, or decline it with a reason.</p></div>
+</section>
+
+<section class="panel request-summary">
+  <div class="panel-head"><div><h2>Request from {{ pickup.contact_name }}</h2><p>Submitted {{ pickup.request_date }} · Requested collection {{ pickup.collection_date }}</p></div><span class="status status-{{ pickup.request_status }}">{{ pickup.get_request_status_display }}</span></div>
+  <div class="request-details">
+    <p><b>Contact:</b> {{ pickup.contact_number }}</p>
+    <p><b>Address:</b> {{ pickup.address }}</p>
+    <p><b>Waste:</b> {{ pickup.waste_type|default:"—" }}</p>
+    <p><b>Quantity:</b> {{ pickup.quantity }} {% if pickup.waste_type %}{{ pickup.waste_type.get_unit_display }}{% endif %}</p>
+    <p><b>Distance:</b> {{ pickup.distance_km }} km</p>
+    <p><b>Estimated fee:</b> {{ pickup.total_fee }}</p>
+  </div>
+</section>
+
+<section class="panel form-panel">
+  <div class="panel-head"><div><h2>Decision and schedule</h2><p>Schedule a future date and time when accepting.</p></div></div>
+  <form method="post" class="form-grid">
+    {% csrf_token %}
+    {% if update_pickup_request.non_field_errors %}<div class="form-errors">{{ update_pickup_request.non_field_errors }}</div>{% endif %}
+    {% for field in update_pickup_request %}
+      <label for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %}<span class="required-mark">*</span>{% endif %}
+        {{ field }}
+        {% for error in field.errors %}<span class="field-error">{{ error }}</span>{% endfor %}
+      </label>
+    {% endfor %}
+    <div class="form-help">Decline reasons are shown to the requestor. Collector messages are shown with the request status.</div>
+    <div class="actions">
+      <button class="btn primary" type="submit">Submit decision</button>
+      <a class="btn secondary" href="{% url 'pickups:display_pickup_requests' %}">Cancel</a>
+    </div>
+  </form>
+</section>
 {% endblock %}
